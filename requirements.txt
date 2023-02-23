@@ -1,2 +1,6 @@
 fastapi==0.92.0
+jose==1.0.0
+passlib==1.7.4
+pip==20.0.2
 pydantic==1.10.5
+SQLAlchemy==2.0.4

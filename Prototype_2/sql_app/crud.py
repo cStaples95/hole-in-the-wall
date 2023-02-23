@@ -6,10 +6,12 @@ import schemas
 
 
 def get_user(db: Session, user_id: int):
+    print(db.query(models.User).filter(models.User.id == user_id).first())
     return db.query(models.User).filter(models.User.id == user_id).first()
 
 
 def get_user_by_email(db: Session, email: str):
+    print(db.query(models.User).filter(models.User.email == email).first())
     return db.query(models.User).filter(models.User.email == email).first()
 
 
@@ -41,3 +43,7 @@ def create_user_post(db: Session, post: schemas.PostCreate, user_id: int):
     db.commit()
     db.refresh(db_post)
     return db_post
+
+
+def verify_password(self, plain_password):
+    return bcrypt.verify(plain_password, self.password)
