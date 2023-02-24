@@ -1,4 +1,6 @@
 # Hole In The Wall
+![HoleInTheWall](https://user-images.githubusercontent.com/74618860/221284439-b63626aa-b854-4b69-8ea4-b3e64b310cb3.png)
+
 This is our source repo for our senior-project "Hole In The Wall"  
 
 Hole in the wall is a mobile social media application centered around sharing user's favorite foods, recommending places to eat, and creating meetups with friends and peers. 
