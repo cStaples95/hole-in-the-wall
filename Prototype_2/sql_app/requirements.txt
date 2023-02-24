@@ -1,5 +1,5 @@
+cryptography==39.0.1
 fastapi==0.92.0
-jose==1.0.0
 passlib==1.7.4
-pydantic==1.10.5
+python-jose==1.16.0
 SQLAlchemy==2.0.4
