@@ -207,9 +207,51 @@ def update_tag(db: Session, tag: schemas.Tag, tag_id: int):
 
 # Delete tag functions
 
-
 def delete_tag(db: Session, tag_id: int):
     db_tag = db.query(models.Tags).filter(models.Tags.TagID == tag_id).first()
     db.delete(db_tag)
     db.commit()
     return db_tag
+
+
+# Post handling funtions
+
+# get post functions
+
+def get_post(db: Session, post_id: int):
+    return db.query(models.Post).filter(models.Post.PostID == post_id).first()
+
+def get_post_by_user_id(db: Session, user_id: int):
+    return db.query(models.Post).filter(models.Post.UserID == user_id).first()
+
+def get_posts(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Post).offset(skip).limit(limit).all()
+
+# Create post functions
+
+def create_post(db: Session, post: schemas.Post):
+    db_post = models.Post(
+        UserID=post.UserID, PostTitle=post.PostTitle, PostContent=post.PostContent, PostDate=post.PostDate)
+    db.add(db_post)
+    db.commit()
+    db.refresh(db_post)
+    return db_post
+
+def update_post(db: Session, post: schemas.Post, post_id: int):
+    db_post = db.query(models.Post).filter(models.Post.PostID == post_id).first()
+    db_post.UserID = post.UserID
+    db_post.PostTitle = post.PostTitle
+    db_post.PostContent = post.PostContent
+    db_post.PostDate = post.PostDate
+    db.commit()
+    db.refresh(db_post)
+    return db_post
+
+# Delete post functions
+
+def delete_post(db: Session, post_id: int):
+    db_post = db.query(models.Post).filter(models.Post.PostID == post_id).first()
+    db.delete(db_post)
+    db.commit()
+    return db_post
+

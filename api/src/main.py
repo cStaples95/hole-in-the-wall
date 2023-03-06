@@ -19,6 +19,8 @@ import database
 SECRET_KEY = "88e3d9f2343ecef017870f83c4d20316549ddcea16efb2746497dcf8d4463a39"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+SALTROUNDS = 10
+
 
 # Establish connnection to database for end points
 
@@ -102,7 +104,7 @@ def verify_password(plain_password, hashed_password):
 
 
 def get_password_hash(password):
-    return pwd_context.hash(password)
+    return pwd_context.hash(password, SALTROUNDS)
 
 
 # End point for creating a token
@@ -119,3 +121,190 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
+
+# --------------------- End points for user interaction ---------------------------------------------
+
+# Create a user
+@app.post("/users/", response_model=schemas.User)
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    db_user = crud.get_user_by_username(db, username=user.username)
+    if db_user:
+        raise HTTPException(status_code=402, detail="Username already registered")
+    return crud.create_user(db=db, user=user)
+
+# Get all users
+@app.get("/users/", response_model=List[schemas.User])
+def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    users = crud.get_users(db, skip=skip, limit=limit)
+    return users
+
+# Get a user by username
+@app.get("/users/{username}", response_model=schemas.User)
+def read_user(username: str, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    db_user = crud.get_user_by_username(db, username=username)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_user
+
+# Get user by e-mail
+@app.get("/users/email/{email}", response_model=schemas.User)
+def read_user(email: str, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    db_user = crud.get_user_by_email(db, email=email)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_user
+
+# Update a user
+@app.put("/users/{username}", response_model=schemas.User)
+def update_user(username: str, user: schemas.UserUpdate, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    db_user = crud.get_user_by_username(db, username=username)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return crud.update_user(db=db, db_user=db_user, user=user)
+
+# Delete a user
+@app.delete("/users/{username}", response_model=schemas.User)
+def delete_user(username: str, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    db_user = crud.get_user_by_username(db, username=username)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return crud.delete_user(db=db, username=username)
+
+# ------------ End points for post interaction -----------------------------
+
+# Create a post
+@app.post("/posts/", response_model=schemas.Post)
+def create_post(post: schemas.PostCreate, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    return crud.create_post(db=db, post=post)
+
+# Get all posts
+@app.get("/posts/", response_model=List[schemas.Post])
+def read_posts(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    posts = crud.get_posts(db, skip=skip, limit=limit)
+    return posts
+
+# Get a post by id
+@app.get("/posts/{post_id}", response_model=schemas.Post)
+def read_post(post_id: int, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    db_post = crud.get_post_by_id(db, post_id=post_id)
+    if db_post is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return db_post
+
+# Get a post by User_ID
+@app.get("/posts/user/{user_id}", response_model=List[schemas.Post])
+def read_post(user_id: int, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    db_post = crud.get_post_by_user_id(db, user_id=user_id)
+    if db_post is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return db_post
+
+# Update a post 
+@app.put("/posts/{post_id}", response_model=schemas.Post)
+def update_post(post_id: int, post: schemas.PostUpdate, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    db_post = crud.get_post_by_id(db, post_id=post_id)
+    if db_post is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return crud.update_post(db=db, db_post=db_post, post=post)
+
+# Delete a post
+@app.delete("/posts/{post_id}", response_model=schemas.Post)
+def delete_post(post_id: int, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    db_post = crud.get_post_by_id(db, post_id=post_id)
+    if db_post is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return crud.delete_post(db=db, post_id=post_id)
+
+# ---------------- End points for comment interaction -----------------------------
+
+# Create a comment
+@app.post("/comments/", response_model=schemas.Comment)
+def create_comment(comment: schemas.CommentCreate, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    return crud.create_comment(db=db, comment=comment)
+
+# Get all comments
+@app.get("/comments/", response_model=List[schemas.Comment])
+def read_comments(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    comments = crud.get_comments(db, skip=skip, limit=limit)
+    return comments
+
+# Get a comment by id
+@app.get("/comments/{comment_id}", response_model=schemas.Comment)
+def read_comment(comment_id: int, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    db_comment = crud.get_comment_by_id(db, comment_id=comment_id)
+    if db_comment is None:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    return db_comment
+
+# Get a comment by User_ID
+@app.get("/comments/user/{user_id}", response_model=List[schemas.Comment])
+def read_comment(user_id: int, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    db_comment = crud.get_comment_by_user_id(db, user_id=user_id)
+    if db_comment is None:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    return db_comment
+
+# Get a comment by Post_ID
+@app.get("/comments/post/{post_id}", response_model=List[schemas.Comment])
+def read_comment(post_id: int, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    db_comment = crud.get_comment_by_post_id(db, post_id=post_id)
+    if db_comment is None:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    return db_comment
+
+# Update a comment
+@app.put("/comments/{comment_id}", response_model=schemas.Comment)
+def update_comment(comment_id: int, comment: schemas.CommentUpdate, db: Session = Depends(get_db), Depends(get_current_active_user)):   
+    db_comment = crud.get_comment_by_id(db, comment_id=comment_id)
+    if db_comment is None:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    return crud.update_comment(db=db, db_comment=db_comment, comment=comment)
+
+# Delete a comment
+@app.delete("/comments/{comment_id}", response_model=schemas.Comment)
+def delete_comment(comment_id: int, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    db_comment = crud.get_comment_by_id(db, comment_id=comment_id)
+    if db_comment is None:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    return crud.delete_comment(db=db, comment_id=comment_id)
+
+# ---------------- End points for Post Tags -----------------------------
+
+# Create a post tag
+@app.post("/post_tags/", response_model=schemas.PostTag)
+def create_post_tag(post_tag: schemas.PostTagCreate, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    return crud.create_tag(db=db, post_tag=post_tag)
+
+
+# Delete a post tag
+@app.delete("/post_tags/{post_tag_id}", response_model=schemas.PostTag)
+def delete_post_tag(post_tag_id: int, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    db_post_tag = crud.get_post_tag_by_id(db, post_tag_id=post_tag_id)
+    if db_post_tag is None:
+        raise HTTPException(status_code=404, detail="Post Tag not found")
+    return crud.delete_post_tag(db=db, post_tag_id=post_tag_id)
+
+# Update a post tag
+@app.put("/post_tags/{post_tag_id}", response_model=schemas.PostTag)
+def update_post_tag(post_tag_id: int, post_tag: schemas.PostTagUpdate, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    db_post_tag = crud.get_post_tag_by_id(db, post_tag_id=post_tag_id)
+    if db_post_tag is None:
+        raise HTTPException(status_code=404, detail="Post Tag not found")
+    return crud.update_post_tag(db=db, db_post_tag=db_post_tag, post_tag=post_tag)
+
+# Get a post tag by id
+@app.get("/post_tags/{post_tag_id}", response_model=schemas.PostTag)
+def read_post_tag(post_tag_id: int, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    db_post_tag = crud.get_post_tag_by_id(db, post_tag_id=post_tag_id)
+    if db_post_tag is None:
+        raise HTTPException(status_code=404, detail="Post Tag not found")
+    return db_post_tag
+
+# Get a post tag by Post_ID
+@app.get("/post_tags/post/{post_id}", response_model=List[schemas.PostTag])
+def read_post_tag(post_id: int, db: Session = Depends(get_db), Depends(get_current_active_user)):
+    db_post_tag = crud.get_post_tag_by_post_id(db, post_id=post_id)
+    if db_post_tag is None:
+        raise HTTPException(status_code=404, detail="Post Tag not found")
+    return db_post_tag
+
