@@ -1,3 +1,4 @@
+import datetime
 from typing import List, Union
 from pydantic import BaseModel
 
@@ -5,161 +6,114 @@ from pydantic import BaseModel
 # V .01
 # File for json schemas using pydantic
 
-# Model for Token
+# User models--------------------------------------------------------------
 
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-# Model for Token Data
+class UserBase(BaseModel):
+    username: str
 
 
-class TokenData(BaseModel):
-    username: Union[str, None] = None
-
-# User models
-
-
-class UserLogin(BaseModel):
-    Username: str
-    Password: str
+class UserCreate(UserBase):
+    password: str
+    email: str
 
 
-class UserCreate(BaseModel):
-    pass
+class UserLogin(UserBase):
+    password: str
 
 
-class UserRegister(BaseModel):
-    Username: str
-    Password: str
-    Email: str
+class UserChangePassword(BaseModel):
+    old_password: str
+    new_password: str
 
 
-class User(BaseModel):
-    UserID: int
-    Username: str
-    Password: str
-    PasswordSalt: str
-    Email: str
-
-    class Config:
-        orm_mode = True
+class UserChangeEmail(BaseModel):
+    old_email: str
+    new_email: str
 
 
 class UserSettings(BaseModel):
-    UserSettingsID: int
-    CommentsNotifs: bool
-    FollowNotifs: bool
-    UserID: int
+    comments_notifs: bool
+    follow_notifs: bool
+
+
+class User(UserBase):
+    id: int
+    email: str
+    settings: UserSettings
 
     class Config:
         orm_mode = True
 
-# Profile models
+
+class UserDelete(User):
+    pass
+
+# Profile models-----------------------------------------------------------
 
 
-class Profile(BaseModel):
-    ProfileID: int
+class ProfileBase(BaseModel):
     FirstName: str
     LastName: str
-    DOB: str
+
+
+class ProfileCreate(ProfileBase):
+    pass
+
+
+class Profile(ProfileBase):
+    id: int
     UserID: int
 
     class Config:
         orm_mode = True
 
-
-class ProfileCreate(BaseModel):
-    FirstName: str
-    LastName: str
-    DOB: str
-    UserID: int
-
- # Comment models
+# Post models--------------------------------------------------------------
 
 
-class Comments(BaseModel):
-    CommentID: int
-    Comment: str
-    DateCommented: str
-    UserID: int
-    PostID: int
-
-    class Config:
-        orm_mode = True
-
-
-class CreateComment(BaseModel):
-    Comment: str
-    DateCommented: str
-    UserID: int
-    PostID: int
-
-
-# Post models
-
-class CreatePost(BaseModel):
+class PostBase(BaseModel):
     Title: str
     Content: str
-    DatePosted: str
-    Location: str
+    DatePosted = datetime.datetime.now()
+    # Optional
+    Location: Union[str, None] = None
+
+
+class PostCreate(PostBase):
+    pass
+
+
+class Post(PostBase):
+    id: int
     UserID: int
 
+    class Config:
+        orm_mode = True
 
-class Post(BaseModel):
-    PostID: int
-    Title: str
+
+class PostDelete(Post):
+    pass
+
+# Comment models-----------------------------------------------------------
+
+
+class CommentBase(BaseModel):
     Content: str
-    DatePosted: str
-    Location: str
+    DatePosted = datetime.datetime.now()
+
+
+class CommentCreate(CommentBase):
+    pass
+
+
+class Comment(CommentBase):
+    id: int
     UserID: int
-
-    class Config:
-        orm_mode = True
-
-
-# Tag models
-
-class Tag(BaseModel):
-    TagID: int
-    Tag: str
     PostID: int
 
     class Config:
         orm_mode = True
 
 
-class CreateTag(BaseModel):
-    Tag: str
-    PostID: int
-
-
-# List models
-
-class UserList(BaseModel):
-    users: List[User]
-
-    class Config:
-        orm_mode = True
-
-
-class ProfileList(BaseModel):
-    profiles: List[Profile]
-
-    class Config:
-        orm_mode = True
-
-
-class CommentList(BaseModel):
-    comments: List[Comments]
-
-    class Config:
-        orm_mode = True
-
-
-class PostList(BaseModel):
-    posts: List[Post]
-
-    class Config:
-        orm_mode = True
+class CommentDelete(Comment):
+    pass
