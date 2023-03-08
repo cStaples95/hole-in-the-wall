@@ -6,6 +6,18 @@ from pydantic import BaseModel
 # V .01
 # File for json schemas using pydantic
 
+# Token models -----------------------------------------------------------
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    username: Union[str, None] = None
+
+
 # User models--------------------------------------------------------------
 
 
@@ -41,13 +53,14 @@ class User(UserBase):
     id: int
     email: str
     settings: UserSettings
+    deleted: bool
 
     class Config:
         orm_mode = True
 
 
 class UserDelete(User):
-    pass
+    deleted = True
 
 # Profile models-----------------------------------------------------------
 

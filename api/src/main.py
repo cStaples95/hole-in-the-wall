@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm, SecurityScopes
 from typing import List, Union
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
@@ -86,6 +86,56 @@ def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_
 
 
 def get_current_active_user(current_user: schemas.User = Depends(get_current_user)):
-    if current_user.Disabled:
+    if current_user.deleted:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
+
+
+@app.post("/token", response_model=schemas.Token)
+async def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
+    user = authenticate_user(db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=400,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user.Username}, expires_delta=access_token_expires
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
+
+# User Endpoints
+
+
+@app.get("/users/", response_model=List[schemas.User])
+def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    users = crud.get_users(db, skip=skip, limit=limit)
+    return users
+
+
+@app.get("/users/me", response_model=schemas.User)
+def read_user_me(current_user: schemas.User = Depends(get_current_active_user)):
+    return current_user
+
+# Create User
+
+
+@app.post("/users/", response_model=schemas.User)
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_username(db, username=user.username)
+    if db_user:
+        raise HTTPException(
+            status_code=400, detail="Username already registered")
+    return crud.create_user(db=db, user=user)
+
+
+@app.delete("/users/{user_id}", response_model=schemas.UserBase)
+def delete_user(user_id: int, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_userID(db, user_id=user_id)
+    if db_user:
+        return crud.delete_user(db=db, user_id=user_id)
+    else:
+        raise HTTPException(
+            status_code=400, detail="User does not exist")

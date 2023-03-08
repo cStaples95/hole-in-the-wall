@@ -14,7 +14,7 @@ class User(Base):
     Username = Column(String, unique=True, index=True)
     Email = Column(String, unique=True, index=True)
     Password = Column(String)
-    PasswordSalt = Column(Boolean, default=True)
+    Deleted = Column(Boolean, default=False)
 
 
 class Profile(Base):
