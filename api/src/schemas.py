@@ -24,6 +24,9 @@ class TokenData(BaseModel):
 class UserBase(BaseModel):
     username: str
 
+    class Config:
+        orm_mode = True
+
 
 class UserCreate(UserBase):
     password: str
@@ -50,9 +53,8 @@ class UserSettings(BaseModel):
 
 
 class User(UserBase):
-    id: int
+    userID: int
     email: str
-    settings: UserSettings
     deleted: bool
 
     class Config:

@@ -10,39 +10,39 @@ from database import Base
 class User(Base):
     __tablename__ = "User"
 
-    UserID = Column(Integer, primary_key=True, index=True)
-    Username = Column(String, unique=True, index=True)
-    Email = Column(String, unique=True, index=True)
-    Password = Column(String)
-    Deleted = Column(Boolean, default=False)
+    userID = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True)
+    email = Column(String, unique=True, index=True)
+    password = Column(String, index=True)
+    deleted = Column(Boolean, default=False)
 
 
 class Profile(Base):
     __tablename__ = "Profile"
 
-    ProfileID = Column(Integer, primary_key=True, index=True)
-    FirstName = Column(String)
-    LastName = Column(String)
+    profileID = Column(Integer, primary_key=True, index=True)
+    firstName = Column(String)
+    lastName = Column(String)
     DOB = Column(String)
 
-    UserID = Column(Integer, ForeignKey("User.UserID"))
+    userID = Column(Integer, ForeignKey("User.UserID"))
 
 
 class UserSettings(Base):
     __tablename__ = "UserSettings"
 
-    UserSettingsID = Column(Integer, primary_key=True, index=True)
-    CommentsNotifs = Column(Boolean, default=True)
-    FollowNotifs = Column(Boolean, default=True)
+    userSettingsID = Column(Integer, primary_key=True, index=True)
+    commentsNotifs = Column(Boolean, default=True)
+    followNotifs = Column(Boolean, default=True)
 
-    UserID = Column(Integer, ForeignKey("User.UserID"))
+    userID = Column(Integer, ForeignKey("User.UserID"))
 
 
 class Comments(Base):
     __tablename__ = "Comments"
 
-    CommentID = Column(Integer, primary_key=True, index=True)
-    Comment = Column(String)
+    commentID = Column(Integer, primary_key=True, index=True)
+    comment = Column(String)
     DateCommented = Column(String)
 
     UserID = Column(Integer, ForeignKey("User.UserID"))

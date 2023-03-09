@@ -22,6 +22,8 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 # Establishing the database
 
+models.Base.metadata.create_all(bind=database.engine)
+
 
 def get_db():
     db = database.SessionLocal()
@@ -60,7 +62,7 @@ def authenticate_user(db: Session, username: str, password: str):
     user = crud.get_user_by_username(db, username)
     if not user:
         return False
-    if not verify_password(password, user.Password):
+    if not verify_password(password, user.password):
         return False
     return user
 
@@ -102,20 +104,24 @@ async def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.Username}, expires_delta=access_token_expires
+        data={"sub": user.username}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
 # User Endpoints
 
 
+# @app.get("/users/", response_model=List[schemas.User])
+# def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+#    users = crud.get_users(db, skip=skip, limit=limit)
+#    return users
 @app.get("/users/", response_model=List[schemas.User])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = crud.get_users(db, skip=skip, limit=limit)
     return users
 
 
-@app.get("/users/me", response_model=schemas.User)
+@app.get("/users/me", response_model=schemas.UserBase)
 def read_user_me(current_user: schemas.User = Depends(get_current_active_user)):
     return current_user
 
@@ -131,7 +137,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return crud.create_user(db=db, user=user)
 
 
-@app.delete("/users/{user_id}", response_model=schemas.UserBase)
+@app.delete("/users/{user_id}", response_model=schemas.User)
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_userID(db, user_id=user_id)
     if db_user:
