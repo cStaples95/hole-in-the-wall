@@ -12,7 +12,15 @@ const SignUpScreen = () => {
   const navigation = useNavigation();
 
   const onRegisterPressed = () => {
-    navigation.navigate("Confirm Email Screen");
+    if (password !== passwordConfirm) 
+    {
+      alert("Passwords do not match");
+      return;
+    }
+    else
+    {
+      navigation.navigate("Confirm Email Screen");
+    }
   };
 
   const onSignInPressed = () => {

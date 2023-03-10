@@ -11,9 +11,10 @@ import Logo from "../../../assets/images/HoleInTheWall.png";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 
 const SignInScreen = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const { height } = useWindowDimensions();
@@ -21,10 +22,20 @@ const SignInScreen = () => {
 
   const onSignInPressed = () => {
     {
-      /* TODO: validate user */
+      axios.post("http://localhost:8000/login", {
+        username: username,
+        password: password,
+    })
+    .then((response) => {
+        console.log(response);
+    })
+    .catch((error) => {
+        console.log(error);
+
+    });
     }
 
-    navigation.navigate("Home Screen");
+    navigation.navigate("Dummy Screen");
   };
 
   const onForgotPasswordPressed = () => {
@@ -44,7 +55,7 @@ const SignInScreen = () => {
           resizeMode="contain"
         />
 
-        <CustomInput placeholder="Email" value={email} setValue={setEmail} />
+        <CustomInput placeholder="Username" value={username} setValue={setUsername} />
 
         <CustomInput
           placeholder="Password"

@@ -21,7 +21,6 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 # Establishing the database
-
 models.Base.metadata.create_all(bind=database.engine)
 
 
@@ -40,9 +39,13 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 # Main point of app
 app = FastAPI()
 
+# allow for access from localhost
+origins = [
+    "http://localhost",
+]
+
+
 # Authentication
-
-
 def create_access_token(data: dict, expires_delta: Union[timedelta, None]):
     to_encode = data.copy()
     if expires_delta:
@@ -91,6 +94,11 @@ def get_current_active_user(current_user: schemas.User = Depends(get_current_use
     if current_user.deleted:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
+
+
+@app.post("/login")
+async def login(UserLogin: schemas.UserLogin):
+    print(UserLogin.username)
 
 
 @app.post("/token", response_model=schemas.Token)
