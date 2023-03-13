@@ -12,6 +12,7 @@ import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignInScreen = () => {
   const [username, setUsername] = useState("");
@@ -28,14 +29,24 @@ const SignInScreen = () => {
     })
     .then((response) => {
         console.log(response);
+        if (response.status === 200) {
+          alert("Login successful");
+          navigation.navigate("Dummy Screen");
+          // This will get changed to a more secure method of storage after more research.
+          AsyncStorage.setItem("token", response.data.token);
+          let token = AsyncStorage.getItem("token");
+          console.log("The token is" + token);
+      }
+
     })
     .catch((error) => {
-        console.log(error);
-
+      if (error.response.status === 401) {
+        alert("Invalid username or password");
+      }
     });
     }
 
-    navigation.navigate("Dummy Screen");
+   // navigation.navigate("Dummy Screen");
   };
 
   const onForgotPasswordPressed = () => {

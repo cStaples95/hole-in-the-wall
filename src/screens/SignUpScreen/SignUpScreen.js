@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, ScrollView } from "react-native";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from '@react-navigation/core';
-
 const SignUpScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,6 +20,7 @@ const SignUpScreen = () => {
     {
       navigation.navigate("Confirm Email Screen");
     }
+    
   };
 
   const onSignInPressed = () => {
