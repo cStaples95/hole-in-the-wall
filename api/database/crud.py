@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 import bcrypt
 from passlib.context import CryptContext
-import models
+from .database import models
 import schemas
 
 # Casey Staples

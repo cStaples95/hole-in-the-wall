@@ -5,10 +5,8 @@ from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
-import crud
-import models
 import schemas
-import database
+from database import models, database, crud
 
 # Casey Staples
 # File to keep all the authentication code separate from the main.py file.
