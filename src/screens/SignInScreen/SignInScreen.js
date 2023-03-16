@@ -46,7 +46,7 @@ const SignInScreen = () => {
         });
     }
 
-    // navigation.navigate("Dummy Screen");
+    navigation.navigate("Dummy Screen");
   };
 
   const onForgotPasswordPressed = () => {
