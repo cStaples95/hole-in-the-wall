@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView } from "react-native";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/core";
+import axios from "axios";
 
 const SignUpScreen = () => {
   const [email, setEmail] = useState("");
@@ -17,7 +18,24 @@ const SignUpScreen = () => {
       alert("Passwords do not match");
       return;
     } else {
-      navigation.navigate("Confirm Email Screen");
+      axios
+        .post("http://localhost:8000/users/register", {
+          email: email,
+          username: username,
+          password: password,
+        })
+        .then((response) => {
+          console.log(response);
+          if (response.status === 201) {
+            alert("Registration successful");
+            navigation.navigate("Confirm Email Screen");
+          }
+        })
+        .catch((error) => {
+          if (error.response.status === 409) {
+            alert("Username already exists");
+          }
+        });
     }
   };
 
@@ -44,7 +62,11 @@ const SignUpScreen = () => {
 
         <CustomInput placeholder="Email" value={email} setValue={setEmail} />
 
-        <CustomInput placeholder="Username" value={username} setValue={setUsername} />
+        <CustomInput
+          placeholder="Username"
+          value={username}
+          setValue={setUsername}
+        />
 
         <CustomInput
           placeholder="Password"
