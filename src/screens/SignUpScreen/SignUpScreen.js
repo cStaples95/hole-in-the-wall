@@ -2,25 +2,41 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from "@react-navigation/core";
+import axios from "axios";
+
 const SignUpScreen = () => {
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
   const navigation = useNavigation();
 
   const onRegisterPressed = () => {
-    if (password !== passwordConfirm) 
-    {
+    if (password !== passwordConfirm) {
       alert("Passwords do not match");
       return;
+    } else {
+      axios
+        .post("http://localhost:8000/users/register", {
+          email: email,
+          username: username,
+          password: password,
+        })
+        .then((response) => {
+          console.log(response);
+          if (response.status === 201) {
+            alert("Registration successful");
+            navigation.navigate("Confirm Email Screen");
+          }
+        })
+        .catch((error) => {
+          if (error.response.status === 409) {
+            alert("Username already exists");
+          }
+        });
     }
-    else
-    {
-      navigation.navigate("Confirm Email Screen");
-    }
-    
   };
 
   const onSignInPressed = () => {
@@ -37,7 +53,6 @@ const SignUpScreen = () => {
     {
       /* TODO: Create Privacy Policy page if necessary and link in navigation */
     }
-
   };
 
   return (
@@ -46,6 +61,12 @@ const SignUpScreen = () => {
         <Text style={styles.title}>Create an Account</Text>
 
         <CustomInput placeholder="Email" value={email} setValue={setEmail} />
+
+        <CustomInput
+          placeholder="Username"
+          value={username}
+          setValue={setUsername}
+        />
 
         <CustomInput
           placeholder="Password"

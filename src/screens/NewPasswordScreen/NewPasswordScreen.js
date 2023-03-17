@@ -13,6 +13,21 @@ const NewPasswordScreen = () => {
 
   const onSubmitPressed = () => {
     navigation.navigate("Sign In Screen");
+
+    // Implement once accounts can be created through the database
+
+    {/*}  const onSubmitPressed = () => {
+    if (setNewPassword !== setNewPasswordConfirm) 
+    {
+      alert("Passwords do not match");
+      return;
+    }
+    else
+    {
+      navigation.navigate("Sign In Screen");
+    }
+    
+  }; */}
   };
 
   const onSignInPressed = () => {

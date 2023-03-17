@@ -21,9 +21,16 @@ import schemas
 def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.User).offset(skip).limit(limit).all()
 
+def get_users_by_userID(db: Session, userID: int):
+    return db.query(models.User).filter(models.User.userID == userID).first()
+
 
 def get_user_by_username(db: Session, username: str):
-    return db.query(models.User).filter(models.User.username == username).first()
+    user_name = db.query(models.User).filter(models.User.username == username).first()
+    if user_name is None:
+        return None # User does not exist
+    else:
+        return user_name
 
 
 def get_user_by_userID(db: Session, userID: int):
@@ -33,12 +40,12 @@ def get_user_by_userID(db: Session, userID: int):
 def create_user(db: Session, user: schemas.UserCreate):
     hashed_password = bcrypt.hashpw(
         user.password.encode('utf-8'), bcrypt.gensalt())
-    db_user = models.User(username=user.username,
+    db_user = models.User(username=user.username.lower(),
                           password=hashed_password, email=user.email, deleted=False)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return db_user
+    return 1
 
 
 def delete_user(db: Session, username: str):
@@ -46,4 +53,11 @@ def delete_user(db: Session, username: str):
     db_user.deleted = True
     db.commit()
     db.refresh(db_user)
-    return db_user
+    return
+
+def delete_user_by_userID(db: Session, userID: int):
+    db_user = get_user_by_userID(db, userID)
+    db.delete(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return
