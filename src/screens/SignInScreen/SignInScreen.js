@@ -32,7 +32,7 @@ const SignInScreen = () => {
           console.log(response);
           if (response.status === 200) {
             alert("Login successful");
-            navigation.navigate("Dummy Screen");
+            navigation.navigate("Home Screen");
             // This will get changed to a more secure method of storage after more research.
             AsyncStorage.setItem("token", response.data.token);
             let token = AsyncStorage.getItem("token");
