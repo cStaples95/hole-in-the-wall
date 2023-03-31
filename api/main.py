@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from typing import List, Union
 from sqlalchemy.orm import Session
 import authentication, schemas
-from database import models, database
+from database import models, database, email
 from routers import users
 # Casey Staples
 # V .01
@@ -21,6 +21,7 @@ origins = [
 
 app.include_router(users.router, prefix="/users", tags=["users"])
 app.include_router(authentication.router, prefix="/auth", tags=["auth"])
+app.include_router(email.router, prefix="/emails", tags=["emails"])
 
 
 

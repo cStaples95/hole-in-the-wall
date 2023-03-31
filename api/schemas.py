@@ -1,6 +1,6 @@
 import datetime
 from typing import List, Union
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 # Casey Staples
 # V .01
@@ -18,6 +18,9 @@ class TokenData(BaseModel):
     username: Union[str, None] = None
 
 
+class EmailSchema(BaseModel):
+    email: List[EmailStr]
+                
 # User models--------------------------------------------------------------
 
 
