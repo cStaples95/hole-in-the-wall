@@ -59,5 +59,12 @@ def delete_user_by_userID(db: Session, userID: int):
     db_user = get_user_by_userID(db, userID)
     db.delete(db_user)
     db.commit()
-    db.refresh(db_user)
     return
+
+def delete_all_users(db: Session):
+    try:
+        num_rows_deleted = db.query(models.User).delete()
+        db.commit()
+    except Exception as e:
+        db.rollback()
+    return num_rows_deleted

@@ -11,6 +11,32 @@ import Logo from "../../../assets/images/HoleInTheWall.png";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/core";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const storeData = async (value) => {
+  try {
+    await AsyncStorage.setItem("userToken", value);
+    alert("Token saved");
+  } catch (e) {
+    // saving error
+    console.log("Error saving data" + e);
+  }
+};
+
+const getData = async () => {
+  try {
+    const value = await AsyncStorage.getItem("userToken");
+    if (value !== null) {
+      alert("Token retrieved");
+      console.log("The token is " + value);
+      return value;
+    }
+  } catch (e) {
+    // error reading value
+    console.log("Error reading data" + e);
+  }
+};
 
 const ConfirmEmailScreen = () => {
   const [verificationCode, setVerificationCode] = useState("");
@@ -21,9 +47,40 @@ const ConfirmEmailScreen = () => {
   const onConfirmPressed = () => {
     {
       /* TODO: validate user */
-    }
+      /* axios
+        .post("http://localhost:8000/emails/sendemail", {
+        email: "akewlhipzter@gmail.com"
+        })
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) {
+            alert("Email sent");
+            // This will get chansged to a more secure method of storage after more research.
+            console.log("The token is " + response.data);
+            let code = response.data;
+            storeData(code);
+          }
+           })*/
+      //.then(() => {
+      try {
+        const code = getData();
 
-    navigation.navigate("Sign In Screen");
+        console.log(
+          "The value of verificationCode is " + verificationCode.valueOf()
+        );
+        console.log("The value of code is " + code.valueOf());
+        if (verificationCode.valueOf() === code.valueOf()) {
+          alert("Email confirmed");
+          navigation.navigate("Sign In Screen");
+        } else {
+          alert("Invalid code");
+        }
+      } catch (error) {
+        if (error.response.status === 401) {
+          alert("Invalid email");
+        }
+      }
+    }
   };
 
   const onSignInPressed = () => {

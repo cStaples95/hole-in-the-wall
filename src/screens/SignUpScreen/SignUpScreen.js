@@ -11,6 +11,7 @@ import Logo from "../../../assets/images/HoleInTheWall.png";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/core";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 const SignUpScreen = () => {
@@ -21,6 +22,30 @@ const SignUpScreen = () => {
 
   const { height } = useWindowDimensions();
   const navigation = useNavigation();
+
+  const storeData = async (value) => {
+    try {
+      await AsyncStorage.setItem("userToken", value);
+      alert("code saved");
+    } catch (e) {
+      // saving error
+      console.log("Error saving data" + e);
+    }
+  };
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("userToken");
+      if (value !== null) {
+        alert("code retrieved");
+        console.log("The code is " + value);
+        return value;
+      }
+    } catch (e) {
+      // error reading value
+      console.log("Error reading data" + e);
+    }
+  };
 
   const onRegisterPressed = () => {
     if (password !== passwordConfirm) {
@@ -37,13 +62,32 @@ const SignUpScreen = () => {
           console.log(response);
           if (response.status === 201) {
             alert("Registration successful");
-            navigation.navigate("Confirm Email Screen");
+            //navigation.navigate("Confirm Email Screen");
           }
         })
-        .catch((error) => {
-          if (error.response.status === 409) {
-            alert("Username already exists");
-          }
+        .then(() => {
+          axios
+            .post("http://localhost:8000/emails/sendemail", {
+              email: ["akewlhipzter@gmail.com"],
+            })
+            .then((response) => {
+              console.log(response);
+              if (response.status === 200) {
+                alert("Email sent");
+                // This will get chansged to a more secure method of storage after more research.
+                console.log("The code is " + response.data);
+                let code = response.data;
+                storeData(code);
+                navigation.navigate("Confirm Email Screen");
+              }
+            })
+            .catch((error) => {
+              if (error.response.status === 409) {
+                alert("Username already exists");
+              } else {
+                console.log(error);
+              }
+            });
         });
     }
   };
