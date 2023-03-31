@@ -33,7 +33,7 @@ async def send_mail(email: schemas.EmailSchema):
          
  
 <p>Hi !!!
-        <br>Thanks for using fastapi mail, keep using it..!!!</p>
+        <br>Thanks for signing up for our app!</p>
  <p>Here is your verification code: """ + str(verify_code) + """</p>
  
         </body>

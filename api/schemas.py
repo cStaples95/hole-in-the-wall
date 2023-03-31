@@ -71,17 +71,19 @@ class UserDelete(User):
 
 
 class ProfileBase(BaseModel):
-    FirstName: str
-    LastName: str
+    firstName: str
+    lastName: str
 
+    class Config:
+        orm_mode = True
 
 class ProfileCreate(ProfileBase):
     pass
 
-
 class Profile(ProfileBase):
-    id: int
-    UserID: int
+    profileID: int
+    userID: int
+    DOB: str
 
     class Config:
         orm_mode = True

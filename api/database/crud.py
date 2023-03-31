@@ -13,17 +13,14 @@ import schemas
 # Get user functions
 
 
-# def get_users(db: Session, skip: int = 0, limit: int = 100):
-# print(db.query(models.User).offset(skip).limit(limit).all())
-# return db.query(models.User).offset(skip).limit(limit).all()
-
-
 def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.User).offset(skip).limit(limit).all()
 
 def get_users_by_userID(db: Session, userID: int):
     return db.query(models.User).filter(models.User.userID == userID).first()
 
+def get_username_by_userID(db: Session, UserID: int):
+    return db.query(models.User.username).filter(models.User.userID == UserID).first()
 
 def get_user_by_username(db: Session, username: str):
     user_name = db.query(models.User).filter(models.User.username == username).first()
@@ -68,3 +65,14 @@ def delete_all_users(db: Session):
     except Exception as e:
         db.rollback()
     return num_rows_deleted
+
+
+def create_new_profile(db: Session, profile: schemas.Profile):
+    db_profile = models.Profile(profileID=profile.id, firstName=profile.FirstName, 
+                                lastName=profile.LastName, DOB=profile.DOB, userID=profile.UserID)
+    db.add(db_profile)
+    db.commit()
+    return 
+
+def get_all_profiles(db: Session):
+    return db.query(models.Profile).all()
