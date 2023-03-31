@@ -20,7 +20,7 @@ origins = [
 ]
 
 app.include_router(users.router, prefix="/users", tags=["users"])
-
+app.include_router(authentication.router, prefix="/auth", tags=["auth"])
 
 
 
