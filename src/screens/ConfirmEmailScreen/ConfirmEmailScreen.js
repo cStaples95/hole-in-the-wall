@@ -14,7 +14,6 @@ import { useNavigation } from "@react-navigation/core";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
 const storeData = async (value) => {
   try {
     await AsyncStorage.setItem("userToken", value);
@@ -62,18 +61,25 @@ const ConfirmEmailScreen = () => {
             storeData(code);
           }
            })*/
-        //.then(() => {
-          try {
-          const code = getData();
-          if (setVerificationCode === code) {
-            alert("Email confirmed");
-            navigation.navigate("Sign In Screen");
-          }
-          }
-        catch(error) {
-          if (error.response.status === 401) {
-            alert("Invalid email");}
-        };
+      //.then(() => {
+      try {
+        const code = getData();
+
+        console.log(
+          "The value of verificationCode is " + verificationCode.valueOf()
+        );
+        console.log("The value of code is " + code.valueOf());
+        if (verificationCode.valueOf() === code.valueOf()) {
+          alert("Email confirmed");
+          navigation.navigate("Sign In Screen");
+        } else {
+          alert("Invalid code");
+        }
+      } catch (error) {
+        if (error.response.status === 401) {
+          alert("Invalid email");
+        }
+      }
     }
   };
 

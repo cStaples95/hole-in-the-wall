@@ -32,7 +32,7 @@ const SignUpScreen = () => {
       console.log("Error saving data" + e);
     }
   };
-  
+
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem("userToken");
@@ -47,7 +47,6 @@ const SignUpScreen = () => {
     }
   };
 
-  
   const onRegisterPressed = () => {
     if (password !== passwordConfirm) {
       alert("Passwords do not match");
@@ -58,7 +57,6 @@ const SignUpScreen = () => {
           email: email,
           username: username,
           password: password,
-
         })
         .then((response) => {
           console.log(response);
@@ -67,35 +65,32 @@ const SignUpScreen = () => {
             //navigation.navigate("Confirm Email Screen");
           }
         })
-        .then(()=>{
+        .then(() => {
           axios
-        .post("http://localhost:8000/emails/sendemail", {
-        email: ["holeinthewallauth@gmail.com"]
-        })
-        .then((response) => {
-          console.log(response);
-          if (response.status === 200) {
-            alert("Email sent");
-            // This will get chansged to a more secure method of storage after more research.
-            console.log("The code is " + response.data);
-            let code = response.data;
-            storeData(code);
-            navigation.navigate("Confirm Email Screen");
-          }
-        })
-        .catch((error) => {
-          if (error.response.status === 409) {
-            alert("Username already exists");
-          }
-          else
-          {
-            console.log(error);
-          }
+            .post("http://localhost:8000/emails/sendemail", {
+              email: ["akewlhipzter@gmail.com"],
+            })
+            .then((response) => {
+              console.log(response);
+              if (response.status === 200) {
+                alert("Email sent");
+                // This will get chansged to a more secure method of storage after more research.
+                console.log("The code is " + response.data);
+                let code = response.data;
+                storeData(code);
+                navigation.navigate("Confirm Email Screen");
+              }
+            })
+            .catch((error) => {
+              if (error.response.status === 409) {
+                alert("Username already exists");
+              } else {
+                console.log(error);
+              }
+            });
         });
-    });
-    };
+    }
   };
-  
 
   const onSignInPressed = () => {
     navigation.navigate("Sign In Screen");
@@ -168,7 +163,7 @@ const SignUpScreen = () => {
       </View>
     </ScrollView>
   );
-  }
+};
 
 const styles = StyleSheet.create({
   root: {

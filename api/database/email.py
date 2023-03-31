@@ -9,11 +9,11 @@ router = APIRouter()
 
 conf = ConnectionConfig(
 
-    MAIL_USERNAME = "akewlhipzter",
-    MAIL_PASSWORD = "xgyuwnpdgruuponw",
+    MAIL_USERNAME = "holeinthewallauth",
+    MAIL_PASSWORD = "dcvnwjjajxgepxan",
     MAIL_PORT = 465, 
     MAIL_SERVER = "smtp.gmail.com",
-    MAIL_FROM = "awkewlhipzter@gmail.com",
+    MAIL_FROM = "aholeinthewallauth@gmail.com",
     MAIL_STARTTLS = False,
     MAIL_SSL_TLS = True,
     USE_CREDENTIALS = True,
@@ -53,4 +53,4 @@ async def send_mail(email: schemas.EmailSchema):
  
      
  
-    return verify_code
+    return str(verify_code)

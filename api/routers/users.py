@@ -31,7 +31,22 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)
     else:
          return crud.create_user(db=db, user=user)
     
+ # Get all Users
+ # This is for testing purposes only
+ # Will be usefull to deleting test data
+@router.get("/all", response_model=List[schemas.User])
+def get_all_users(db: Session = Depends(database.get_db)):
+    return crud.get_users(db=db)
 
+   
+
+
+# Delete all users
+# This is for testing purposes only
+# Will be usefull to deleting test data
+@router.delete("/delete/all", status_code=status.HTTP_204_NO_CONTENT)
+def delete_all_users(db: Session = Depends(database.get_db)):
+     return crud.delete_all_users(db)
 
 # To be used as an easy way to delete test data from the database
 # Will throw an error when used, but will still delete the user (I don't know why)
@@ -45,3 +60,4 @@ def delete_user(id: int, db: Session = Depends(database.get_db)):
     else:
         crud.delete_user_by_userID(db, userID=id)
         return
+
