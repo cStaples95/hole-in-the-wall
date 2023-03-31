@@ -46,39 +46,24 @@ const ConfirmEmailScreen = () => {
 
   const onConfirmPressed = () => {
     {
-      /* TODO: validate user */
-      /* axios
-        .post("http://localhost:8000/emails/sendemail", {
-        email: "akewlhipzter@gmail.com"
-        })
-        .then((response) => {
-          console.log(response);
-          if (response.status === 200) {
-            alert("Email sent");
-            // This will get chansged to a more secure method of storage after more research.
-            console.log("The token is " + response.data);
-            let code = response.data;
-            storeData(code);
-          }
-           })*/
-      //.then(() => {
       try {
-        const code = getData();
+        const code = new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve(getData());
+          }, 1000);
+        });
 
-        console.log(
-          "The value of verificationCode is " + verificationCode.valueOf()
-        );
-        console.log("The value of code is " + code.valueOf());
-        if (verificationCode.valueOf() === code.valueOf()) {
-          alert("Email confirmed");
-          navigation.navigate("Sign In Screen");
-        } else {
-          alert("Invalid code");
-        }
+        code.then((value) => {
+          console.log("The code is " + value);
+          if (value === verificationCode) {
+            alert("Email verified");
+            navigation.navigate("Sign In Screen");
+          } else {
+            alert("Invalid code");
+          }
+        });
       } catch (error) {
-        if (error.response.status === 401) {
-          alert("Invalid email");
-        }
+        console.log("Error: " + error);
       }
     }
   };
@@ -89,7 +74,28 @@ const ConfirmEmailScreen = () => {
 
   const onResendVerificationPressed = () => {
     {
-      /* TODO: Set up resend verification code to linked email address */
+      axios
+        .post("http://localhost:8000/emails/sendemail", {
+          email: ["akewlhipzter@gmail.com"],
+        })
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) {
+            alert("Email sent");
+            // This will get chansged to a more secure method of storage after more research.
+            console.log("The code is " + response.data);
+            let code = response.data;
+            storeData(code);
+            navigation.navigate("Confirm Email Screen");
+          }
+        })
+        .catch((error) => {
+          if (error.response.status === 409) {
+            alert("Username already exists");
+          } else {
+            console.log(error);
+          }
+        });
     }
   };
 
