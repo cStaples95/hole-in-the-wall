@@ -68,11 +68,19 @@ def delete_all_users(db: Session):
 
 
 def create_new_profile(db: Session, profile: schemas.Profile):
-    db_profile = models.Profile(profileID=profile.id, firstName=profile.FirstName, 
-                                lastName=profile.LastName, DOB=profile.DOB, userID=profile.UserID)
+    db_profile = models.Profile(firstName=profile.firstName, 
+                                lastName=profile.lastName, DOB=profile.DOB, userID=profile.userID)
     db.add(db_profile)
     db.commit()
     return 
 
 def get_all_profiles(db: Session):
     return db.query(models.Profile).all()
+
+def delete_all_profiles(db: Session):
+    try:
+        num_rows_deleted = db.query(models.Profile).delete()
+        db.commit()
+    except Exception as e:
+        db.rollback()
+    return num_rows_deleted

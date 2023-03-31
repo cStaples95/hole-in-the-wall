@@ -73,12 +73,13 @@ class UserDelete(User):
 class ProfileBase(BaseModel):
     firstName: str
     lastName: str
+    DOB: str
 
     class Config:
         orm_mode = True
 
 class ProfileCreate(ProfileBase):
-    pass
+    userID: Union[str, None] = None
 
 class Profile(ProfileBase):
     profileID: int

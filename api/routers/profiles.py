@@ -8,10 +8,14 @@ from database import crud, database
 router = APIRouter()
 
 @router.post("/create")
-def create_profile(profile: schemas.Profile, db : Session = Depends(database.get_db)):
+def create_profile(profile: schemas.ProfileCreate, db : Session = Depends(database.get_db), current_user: schemas.User = Depends(authentication.get_current_user)):
+    profile.userID = current_user.userID
     return crud.create_new_profile(db=db, profile=profile)
 
 @router.get("/all", response_model=List[schemas.Profile])
 def get_all_profiles(db: Session = Depends(database.get_db)):
     return crud.get_all_profiles(db=db)
 
+@router.delete("/delete/all", status_code=status.HTTP_204_NO_CONTENT)
+def delete_all_profiles(db: Session = Depends(database.get_db)):
+    return crud.delete_all_profiles(db)
