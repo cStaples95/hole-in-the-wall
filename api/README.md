@@ -1,8 +1,8 @@
 # Requirements
-Check the requirments.txt to install the required modules for this project
+Check the requirements.txt to install the required modules for this project
 this can be done easily on the command line once you're inside the dir
 ```
-pip install -r requirments.txt
+pip install -r requirements.txt
 ```
 
 # Setting up local server 
