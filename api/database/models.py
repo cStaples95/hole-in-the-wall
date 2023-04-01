@@ -20,12 +20,12 @@ class User(Base):
 class Profile(Base):
     __tablename__ = "Profile"
 
-    profileID = Column(Integer, primary_key=True, index=True)
+    profileID = Column(Integer, primary_key=True, index=True, autoincrement= True)
     firstName = Column(String)
     lastName = Column(String)
     DOB = Column(String)
 
-    userID = Column(Integer, ForeignKey("User.UserID"))
+    userID = Column(Integer, ForeignKey("User.userID"))
 
 
 class UserSettings(Base):

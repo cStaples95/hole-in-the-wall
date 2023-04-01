@@ -20,21 +20,21 @@ conf = ConnectionConfig(
     VALIDATE_CERTS = True
 )
 
-verify_code = randint(100000, 999999)
 
 
 
 @router.post("/sendemail", status_code=200)
 async def send_mail(email: schemas.EmailSchema):
  
+    code = randint(100000, 999999)
     template = """
         <html>
         <body>
          
  
 <p>Hi !!!
-        <br>Thanks for using fastapi mail, keep using it..!!!</p>
- <p>Here is your verification code: """ + str(verify_code) + """</p>
+        <br>Thanks for signing up for our app!</p>
+ <p>Here is your verification code: """ + str(code) + """</p>
  
         </body>
         </html>
@@ -52,5 +52,5 @@ async def send_mail(email: schemas.EmailSchema):
     print(message)
  
      
- 
-    return str(verify_code)
+    
+    return str(code)
