@@ -23,30 +23,6 @@ const SignUpScreen = () => {
   const { height } = useWindowDimensions();
   const navigation = useNavigation();
 
-  const storeData = async (value) => {
-    try {
-      await AsyncStorage.setItem("userToken", value);
-      alert("code saved");
-    } catch (e) {
-      // saving error
-      console.log("Error saving data" + e);
-    }
-  };
-
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem("userToken");
-      if (value !== null) {
-        alert("code retrieved");
-        console.log("The code is " + value);
-        return value;
-      }
-    } catch (e) {
-      // error reading value
-      console.log("Error reading data" + e);
-    }
-  };
-
   const onRegisterPressed = () => {
     if (password !== passwordConfirm) {
       alert("Passwords do not match");
@@ -74,7 +50,6 @@ const SignUpScreen = () => {
               console.log(response);
               if (response.status === 200) {
                 alert("Email sent");
-                // This will get chansged to a more secure method of storage after more research.
                 console.log("The code is " + response.data);
                 let code = response.data;
                 storeData(code);

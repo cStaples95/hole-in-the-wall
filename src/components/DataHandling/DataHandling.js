@@ -1,9 +1,9 @@
 import React from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const storeData = async (value) => {
+const storeData = async (key, value) => {
   try {
-    await AsyncStorage.setItem("userToken", value);
+    await AsyncStorage.setItem(key, value);
     alert("Token saved");
   } catch (e) {
     // saving error
@@ -11,9 +11,9 @@ const storeData = async (value) => {
   }
 };
 
-const getData = async () => {
+const getData = async (key) => {
   try {
-    const value = await AsyncStorage.getItem("userToken");
+    const value = await AsyncStorage.getItem(key);
     if (value !== null) {
       alert("Token retrieved");
       console.log("The token is " + value);

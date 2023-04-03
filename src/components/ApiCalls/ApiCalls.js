@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import DataHandling from "../DataHandling";
 
-function ApiLogin(username, password) {
+this.ApiLogin = function (username, password) {
   const form_data = new FormData();
   form_data.append("username", username);
   form_data.append("password", password);
@@ -16,16 +16,19 @@ function ApiLogin(username, password) {
         navigation.navigate("Home Screen");
         // This will get chansged to a more secure method of storage after more research.
         console.log("The token is " + response.data.access_token);
-        DataHandling.storeData(response.data.access_token);
+        DataHandling.storeData("token", response.data.access_token);
       }
     })
     .then(() => {
-      console.log("The token is " + DataHandling.getData());
+      console.log("The token is " + DataHandling.getData("token"));
+      return 1;
     })
     .catch((error) => {
       if (error.response.status === 401) {
         alert("Invalid username or password");
+        return 0;
       }
     });
-}
+};
+var ApiLogin = this.ApiLogin;
 export default ApiLogin;

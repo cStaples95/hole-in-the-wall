@@ -12,32 +12,6 @@ import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 import ApiCalls from "../../components/ApiCalls";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-const storeData = async (value) => {
-  try {
-    await AsyncStorage.setItem("userToken", value);
-    alert("Token saved");
-  } catch (e) {
-    // saving error
-    console.log("Error saving data" + e);
-  }
-};
-
-const getData = async () => {
-  try {
-    const value = await AsyncStorage.getItem("userToken");
-    if (value !== null) {
-      alert("Token retrieved");
-      console.log("The token is " + value);
-      return value;
-    }
-  } catch (e) {
-    // error reading value
-    console.log("Error reading data" + e);
-  }
-};
 
 const SignInScreen = () => {
   const [username, setUsername] = useState("");
@@ -47,30 +21,7 @@ const SignInScreen = () => {
 
   const onSignInPressed = () => {
     {
-      const form_data = new FormData();
-      form_data.append("username", username);
-      form_data.append("password", password);
-
-      axios
-        .post("http://localhost:8000/users/login", form_data)
-        .then((response) => {
-          console.log(response);
-          if (response.status === 200) {
-            alert("Login successful");
-            navigation.navigate("Home Screen");
-            // This will get chansged to a more secure method of storage after more research.
-            console.log("The token is " + response.data.access_token);
-            storeData(response.data.access_token);
-          }
-        })
-        .then(() => {
-          console.log("The token is " + getData());
-        })
-        .catch((error) => {
-          if (error.response.status === 401) {
-            alert("Invalid username or password");
-          }
-        });
+      ApiCalls.ApiLogin();
     }
   };
 

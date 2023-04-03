@@ -5,10 +5,6 @@ from .database import models
 import schemas
 
 # Casey Staples
-# V .01
-# File for handling CRUD operations
-
-# Password Hashing
 
 # Get user functions
 
@@ -66,6 +62,8 @@ def delete_all_users(db: Session):
         db.rollback()
     return num_rows_deleted
 
+
+# Profile functions
 
 def create_new_profile(db: Session, profile: schemas.Profile):
     db_profile = models.Profile(firstName=profile.firstName, 
