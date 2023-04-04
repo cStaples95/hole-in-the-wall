@@ -52,7 +52,7 @@ const SignUpScreen = () => {
                 alert("Email sent");
                 console.log("The code is " + response.data);
                 let code = response.data;
-                storeData(code);
+                storeData("email-code", code);
                 navigation.navigate("Confirm Email Screen");
               }
             })

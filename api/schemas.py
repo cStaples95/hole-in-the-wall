@@ -103,13 +103,13 @@ class PostBase(BaseModel):
         orm_mode = True
 
 class Post(PostBase):
-    UserID: int
+    userID: int
 
     class Config:
         orm_mode = True
 
-class PostCreate(Post):
-    pass
+class PostCreate(PostBase):
+    userID: Union[str, None] = None
 
 class PostDelete(Post):
     pass

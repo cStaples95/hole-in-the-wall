@@ -3,7 +3,7 @@ from typing import List, Union
 from sqlalchemy.orm import Session
 import authentication, schemas
 from database import models, database, email
-from routers import users, profiles
+from routers import users, profiles, posts
 # Casey Staples
 
 
@@ -18,9 +18,9 @@ origins = [
 ]
 
 app.include_router(users.router, prefix="/users", tags=["users"])
-app.include_router(authentication.router, prefix="/auth", tags=["auth"])
 app.include_router(email.router, prefix="/emails", tags=["emails"])
 app.include_router(profiles.router, prefix="/profiles", tags=["profiles"])
+app.include_router(posts.router, prefix="/posts", tags=["posts"])
 
 
 
