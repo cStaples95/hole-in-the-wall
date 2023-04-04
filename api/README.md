@@ -24,8 +24,10 @@ try using these commands instead.
 
 ```
 python -m pip install -r requirements.txt
+```
 
-uvicorn main:app --reload
+```
+python -m uvicorn main:app --reload
 ```
 
 # API Docs Access
