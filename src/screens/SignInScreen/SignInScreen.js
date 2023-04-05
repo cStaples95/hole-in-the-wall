@@ -11,39 +11,38 @@ import Logo from "../../../assets/images/HoleInTheWall.png";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
-import ApiCalls from "../../components/ApiCalls";
-import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-const storeData = async (value) => {
-  try {
-    await AsyncStorage.setItem("userToken", value);
-    alert("Token saved");
-  } catch (e) {
-    // saving error
-    console.log("Error saving data" + e);
-  }
-};
-
-const getData = async () => {
-  try {
-    const value = await AsyncStorage.getItem("userToken");
-    if (value !== null) {
-      alert("Token retrieved");
-      console.log("The token is " + value);
-      return value;
-    }
-  } catch (e) {
-    // error reading value
-    console.log("Error reading data" + e);
-  }
-};
+import axios from "axios";
 
 const SignInScreen = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { height } = useWindowDimensions();
   const navigation = useNavigation();
+
+  const storeData = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, value);
+      alert("Token saved");
+    } catch (e) {
+      // saving error
+      console.log("Error saving data" + e);
+    }
+  };
+
+  const getData = async (key) => {
+    try {
+      const value = await AsyncStorage.getItem(key);
+      if (value !== null) {
+        alert("Token retrieved");
+        console.log("The token is " + value);
+        return value;
+      }
+    } catch (e) {
+      // error reading value
+      console.log("Error reading data" + e);
+    }
+  };
 
   const onSignInPressed = () => {
     {
@@ -60,15 +59,17 @@ const SignInScreen = () => {
             navigation.navigate("Home Screen");
             // This will get chansged to a more secure method of storage after more research.
             console.log("The token is " + response.data.access_token);
-            storeData(response.data.access_token);
+            storeData("token", response.data.access_token);
           }
         })
         .then(() => {
-          console.log("The token is " + getData());
+          console.log("The token is " + getData("token"));
+          return 1;
         })
         .catch((error) => {
           if (error.response.status === 401) {
             alert("Invalid username or password");
+            return 0;
           }
         });
     }

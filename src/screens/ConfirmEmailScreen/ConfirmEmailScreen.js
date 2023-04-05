@@ -49,7 +49,7 @@ const ConfirmEmailScreen = () => {
       try {
         const code = new Promise((resolve, reject) => {
           setTimeout(() => {
-            resolve(getData());
+            resolve(getData("email-code"));
           }, 1000);
         });
 

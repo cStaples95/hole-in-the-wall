@@ -99,18 +99,17 @@ class PostBase(BaseModel):
     # Optional
     Location: Union[str, None] = None
 
-
-class PostCreate(PostBase):
-    pass
-
+    class Config:
+        orm_mode = True
 
 class Post(PostBase):
-    id: int
-    UserID: int
+    userID: int
 
     class Config:
         orm_mode = True
 
+class PostCreate(PostBase):
+    userID: Union[str, None] = None
 
 class PostDelete(Post):
     pass
