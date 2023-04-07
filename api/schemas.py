@@ -2,7 +2,7 @@ import datetime
 from typing import List, Union
 from pydantic import BaseModel, EmailStr
 
-# Casey Staples
+# Casey Staples and Jonathan White
 # V .01
 # File for json schemas using pydantic
 
@@ -69,12 +69,10 @@ class UserDelete(User):
 
 # Profile models-----------------------------------------------------------
 
-
+# got rid of firstname, lastname and dob added bio and picture (picture is str until we figure out how to add image)
 class ProfileBase(BaseModel):
-    firstName: str
-    lastName: str
-    DOB: str
-
+    Bio: str
+    Picture: str
     class Config:
         orm_mode = True
 
@@ -84,7 +82,6 @@ class ProfileCreate(ProfileBase):
 class Profile(ProfileBase):
     profileID: int
     userID: int
-    DOB: str
 
     class Config:
         orm_mode = True
@@ -94,7 +91,7 @@ class Profile(ProfileBase):
 
 class PostBase(BaseModel):
     Title: str
-    Content: str
+    Description: str
     DatePosted = datetime.datetime.now()
     # Optional
     Location: Union[str, None] = None
@@ -127,7 +124,7 @@ class CommentCreate(CommentBase):
 
 
 class Comment(CommentBase):
-    id: int
+    commentID: int
     UserID: int
     PostID: int
 
@@ -136,4 +133,71 @@ class Comment(CommentBase):
 
 
 class CommentDelete(Comment):
+    pass
+
+
+# Group models -Jonathan White----------------------------------------------------------
+
+class GroupBase(BaseModel):
+    GroupName: str
+
+class GroupCreate(GroupBase):
+    pass
+
+class Group(GroupBase):
+    GroupID: int
+    HangoutID: int
+    
+    class Config:
+        orm_mode = True
+
+class GroupDelete(Group):
+    pass
+
+
+class GroupMemberBase(BaseModel):
+    GroupMemberID: int
+
+    class Config:
+        orm_mode = True
+
+class GroupMember(GroupMemberBase):
+    UserID: int
+    GroupID: int
+
+    class Config:
+        orm_mode = True
+
+
+# Friends models -Jonathan White----------------------------------------------------------
+
+class FriendsBase(BaseModel):
+    FriendshipID: int
+
+
+class Friends(FriendsBase):
+    FriendUserID: int
+    UserID: int
+
+    class Config:
+        orm_mode = True
+
+# Hangout models -Jonathan White----------------------------------------------------------
+
+class HangoutBase(BaseModel):
+    HangoutName: str
+    Date: str
+    Votes: int
+
+class HangoutCreate(HangoutBase):
+    pass
+
+class Hangout(HangoutBase):
+    HangoutID: int
+    GroupID: int
+
+    class Config:
+        orm_mode = True
+
+class HangoutDelete(Hangout):
     pass
