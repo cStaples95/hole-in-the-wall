@@ -4,16 +4,13 @@ const navbar= () =>{
   return (
   <div>
     <li>
-      <Link to="/">Dogs</Link>
+      <Link to="/">HomeScreen</Link>
     </li>
     <li>
-      <Link to="/cats">Cats</Link>
+      <Link to="/profile">ProfileScreen</Link>
     </li>
     <li>
-      <Link to="/sheeps">Sheeps</Link>
-    </li>
-    <li>
-      <Link to="/goats">Goats</Link>
+      <Link to="/groups">GroupScreen</Link>
     </li>
   </div>
   );
