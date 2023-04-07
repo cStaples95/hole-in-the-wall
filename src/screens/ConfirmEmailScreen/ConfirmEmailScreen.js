@@ -11,6 +11,32 @@ import Logo from "../../../assets/images/HoleInTheWall.png";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/core";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const storeData = async (value) => {
+  try {
+    await AsyncStorage.setItem("userToken", value);
+    alert("Token saved");
+  } catch (e) {
+    // saving error
+    console.log("Error saving data" + e);
+  }
+};
+
+const getData = async () => {
+  try {
+    const value = await AsyncStorage.getItem("userToken");
+    if (value !== null) {
+      alert("Token retrieved");
+      console.log("The token is " + value);
+      return value;
+    }
+  } catch (e) {
+    // error reading value
+    console.log("Error reading data" + e);
+  }
+};
 
 const ConfirmEmailScreen = () => {
   const [verificationCode, setVerificationCode] = useState("");
@@ -20,10 +46,26 @@ const ConfirmEmailScreen = () => {
 
   const onConfirmPressed = () => {
     {
-      /* TODO: validate user */
-    }
+      try {
+        const code = new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve(getData("email-code"));
+          }, 1000);
+        });
 
-    navigation.navigate("Sign In Screen");
+        code.then((value) => {
+          console.log("The code is " + value);
+          if (value === verificationCode) {
+            alert("Email verified");
+            navigation.navigate("Sign In Screen");
+          } else {
+            alert("Invalid code");
+          }
+        });
+      } catch (error) {
+        console.log("Error: " + error);
+      }
+    }
   };
 
   const onSignInPressed = () => {
@@ -32,7 +74,28 @@ const ConfirmEmailScreen = () => {
 
   const onResendVerificationPressed = () => {
     {
-      /* TODO: Set up resend verification code to linked email address */
+      axios
+        .post("http://localhost:8000/emails/sendemail", {
+          email: ["akewlhipzter@gmail.com"],
+        })
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) {
+            alert("Email sent");
+            // This will get chansged to a more secure method of storage after more research.
+            console.log("The code is " + response.data);
+            let code = response.data;
+            storeData(code);
+            navigation.navigate("Confirm Email Screen");
+          }
+        })
+        .catch((error) => {
+          if (error.response.status === 409) {
+            alert("Username already exists");
+          } else {
+            console.log(error);
+          }
+        });
     }
   };
 

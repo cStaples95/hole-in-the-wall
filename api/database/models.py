@@ -10,7 +10,7 @@ from .database import Base
 class User(Base):
     __tablename__ = "User"
 
-    userID = Column(Integer, primary_key=True, index=True)
+    userID = Column(Integer, primary_key=True, index=True, autoincrement=True)
     username = Column(String, unique=True, index=True)
     email = Column(String, unique=True, index=True)
     password = Column(String, index=True)
@@ -20,12 +20,12 @@ class User(Base):
 class Profile(Base):
     __tablename__ = "Profile"
 
-    profileID = Column(Integer, primary_key=True, index=True)
+    profileID = Column(Integer, primary_key=True, index=True, autoincrement= True)
     firstName = Column(String)
     lastName = Column(String)
     DOB = Column(String)
 
-    userID = Column(Integer, ForeignKey("User.UserID"))
+    userID = Column(Integer, ForeignKey("User.userID"))
 
 
 class UserSettings(Base):
@@ -45,20 +45,20 @@ class Comments(Base):
     comment = Column(String)
     DateCommented = Column(String)
 
-    UserID = Column(Integer, ForeignKey("User.UserID"))
+    userID = Column(Integer, ForeignKey("User.userID"))
     PostID = Column(Integer, ForeignKey("Post.PostID"))
 
 
 class Post(Base):
     __tablename__ = "Post"
 
-    PostID = Column(Integer, primary_key=True, index=True)
+    PostID = Column(Integer, primary_key=True, index=True, autoincrement=True)
     Title = Column(String)
     Content = Column(String)
     DatePosted = Column(String)
     Location = Column(String)
 
-    UserID = Column(Integer, ForeignKey("User.UserID"))
+    userID = Column(Integer, ForeignKey("User.userID"))
 
 
 class PostTages(Base):

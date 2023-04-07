@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException, status, APIRouter
 from typing import List, Union
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 import authentication, schemas
 from database import crud, database
@@ -10,7 +11,7 @@ router = APIRouter()
 
 # User Login 
 @router.post("/login")
-async def login(UserLogin: schemas.UserLogin, db: Session = Depends(database.get_db)):
+def login(UserLogin: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(database.get_db)):
     if authentication.authenticate_user(db, UserLogin.username.lower(), UserLogin.password):
         access_token = authentication.create_access_token(
             data={"sub": UserLogin.username}, expires_delta=authentication.ACCESS_TOKEN_ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -23,14 +24,29 @@ async def login(UserLogin: schemas.UserLogin, db: Session = Depends(database.get
 # Create User
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
-    db_user = crud.get_user_by_username(db, username=user.username.lower())
+    db_user = crud.get_user_by_username(db, user.username.lower())
     if db_user is not None:
         raise HTTPException(
             status_code=409, detail="Username already registered")
     else:
          return crud.create_user(db=db, user=user)
     
+ # Get all Users
+ # This is for testing purposes only
+ # Will be usefull to deleting test data
+@router.get("/all", response_model=List[schemas.User])
+def get_all_users(db: Session = Depends(database.get_db)):
+    return crud.get_users(db=db)
 
+   
+
+
+# Delete all users
+# This is for testing purposes only
+# Will be usefull to deleting test data
+@router.delete("/delete/all", status_code=status.HTTP_204_NO_CONTENT)
+def delete_all_users(db: Session = Depends(database.get_db)):
+     return crud.delete_all_users(db)
 
 # To be used as an easy way to delete test data from the database
 # Will throw an error when used, but will still delete the user (I don't know why)
@@ -44,3 +60,4 @@ def delete_user(id: int, db: Session = Depends(database.get_db)):
     else:
         crud.delete_user_by_userID(db, userID=id)
         return
+

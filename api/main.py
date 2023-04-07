@@ -2,11 +2,9 @@ from fastapi import FastAPI, Depends, HTTPException
 from typing import List, Union
 from sqlalchemy.orm import Session
 import authentication, schemas
-from database import models, database
-from routers import users
+from database import models, database, email
+from routers import users, profiles, posts
 # Casey Staples
-# V .01
-# main file that will contain the FastAPI Endpoints
 
 
 models.Base.metadata.create_all(bind=database.engine)
@@ -20,7 +18,9 @@ origins = [
 ]
 
 app.include_router(users.router, prefix="/users", tags=["users"])
-
+app.include_router(email.router, prefix="/emails", tags=["emails"])
+app.include_router(profiles.router, prefix="/profiles", tags=["profiles"])
+app.include_router(posts.router, prefix="/posts", tags=["posts"])
 
 
 

@@ -1,6 +1,6 @@
 import datetime
 from typing import List, Union
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 # Casey Staples
 # V .01
@@ -18,6 +18,9 @@ class TokenData(BaseModel):
     username: Union[str, None] = None
 
 
+class EmailSchema(BaseModel):
+    email: List[EmailStr]
+                
 # User models--------------------------------------------------------------
 
 
@@ -68,17 +71,20 @@ class UserDelete(User):
 
 
 class ProfileBase(BaseModel):
-    FirstName: str
-    LastName: str
+    firstName: str
+    lastName: str
+    DOB: str
 
+    class Config:
+        orm_mode = True
 
 class ProfileCreate(ProfileBase):
-    pass
-
+    userID: Union[str, None] = None
 
 class Profile(ProfileBase):
-    id: int
-    UserID: int
+    profileID: int
+    userID: int
+    DOB: str
 
     class Config:
         orm_mode = True
@@ -93,18 +99,17 @@ class PostBase(BaseModel):
     # Optional
     Location: Union[str, None] = None
 
-
-class PostCreate(PostBase):
-    pass
-
+    class Config:
+        orm_mode = True
 
 class Post(PostBase):
-    id: int
-    UserID: int
+    userID: int
 
     class Config:
         orm_mode = True
 
+class PostCreate(PostBase):
+    userID: Union[str, None] = None
 
 class PostDelete(Post):
     pass

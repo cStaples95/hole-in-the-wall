@@ -39,7 +39,11 @@ git checkout -b prototype-casey
 ```
 4. After you've completed work in your branch, use the following to push a commit to remote  
 ```
-git add . 
+git add -u (to add the files you've changed)
+or
+git add <file-name> (to add a single file)
+or
+git add . (to all everything in the current dir) 
 git commit -m " I did this work on these files."
 git push -u origin <branch_name> # If this is your first push of the branch to remote 
 git push -u origin prototype-casey
