@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import {BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import navbar from "../components/navbar";
 import SignInScreen from "../screens/SignInScreen";
@@ -34,11 +34,11 @@ const Navigation = () => {
 const Navbar = () => {
   return (
     <Router>
-      <Switch>
+      <Routes>
         <Route path='/' exact component={HomeScreen} />
         <Route path='/profile' exact component={ProfileScreen} />
         <Route path='/gorups' exact component={GroupScreen} />
-      </Switch>
+      </Routes>
       <navbar />
     </Router>
   )
