@@ -10,18 +10,18 @@ from .database import Base
 class User(Base):
     __tablename__ = "User"
 
-    userID = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    username = Column(String, unique=True, index=True)
-    email = Column(String, unique=True, index=True)
-    password = Column(String, index=True)
-    deleted = Column(Boolean, default=False)
+    UserID = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    Username = Column(String, unique=True, index=True)
+    Email = Column(String, unique=True, index=True)
+    Password = Column(String, index=True)
+    Deleted = Column(Boolean, default=False)
 
 # chnaged to add blob image and bio
 class Profile(Base):
     __tablename__ = "Profile"
 
-    profileID = Column(Integer, primary_key=True, index=True, autoincrement= True)
-    userID = Column(Integer, ForeignKey("User.userID"))
+    ProfileID = Column(Integer, primary_key=True, index=True, autoincrement= True)
+    UserID = Column(Integer, ForeignKey("User.UserID"))
     Picture = Column(BLOB)
     Bio = Column(String)
 
@@ -29,21 +29,21 @@ class Profile(Base):
 class UserSettings(Base):
     __tablename__ = "UserSettings"
 
-    userSettingsID = Column(Integer, primary_key=True, index=True)
-    commentsNotifs = Column(Boolean, default=True)
-    followNotifs = Column(Boolean, default=True)
+    UserSettingsID = Column(Integer, primary_key=True, index=True)
+    CommentsNotifs = Column(Boolean, default=True)
+    FollowNotifs = Column(Boolean, default=True)
 
-    userID = Column(Integer, ForeignKey("User.UserID"))
+    UserID = Column(Integer, ForeignKey("User.UserID"))
 
 
 class Comments(Base):
     __tablename__ = "Comments"
 
-    commentID = Column(Integer, primary_key=True, index=True)
-    comment = Column(String)
+    CommentID = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    Comment = Column(String)
     DateCommented = Column(String)
 
-    userID = Column(Integer, ForeignKey("User.userID"))
+    UserID = Column(Integer, ForeignKey("User.UserID"))
     PostID = Column(Integer, ForeignKey("Post.PostID"))
 
 # added picture
@@ -57,7 +57,7 @@ class Post(Base):
     Location = Column(String)
     Picture = Column(BLOB)
 
-    userID = Column(Integer, ForeignKey("User.userID"))
+    UserID = Column(Integer, ForeignKey("User.UserID"))
 
 
 class PostTages(Base):
