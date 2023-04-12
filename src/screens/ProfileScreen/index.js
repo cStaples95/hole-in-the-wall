@@ -1,1 +1,3 @@
-export { default }  from './ProfileScreen';
+import ProfileScreen from './ProfileScreen';
+
+export { ProfileScreen };
