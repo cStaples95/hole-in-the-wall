@@ -10,10 +10,10 @@ router = APIRouter()
 @router.post("/create" , status_code= status.HTTP_201_CREATED) 
 def create_profile(profile: schemas.ProfileCreate, db : Session = Depends(database.get_db),
                     current_user: schemas.User = Depends(authentication.get_current_user)):
-    profile.userID = current_user.UserID
+    profile.UserID = current_user.UserID
     return crud.create_new_profile(db=db, profile=profile)
 
-@router.get("/all", response_model=List[schemas.Profile])
+@router.get("/all", response_model=List[schemas.ProfileReturn])
 def get_all_profiles(db: Session = Depends(database.get_db)):
     return crud.get_all_profiles(db=db)
 

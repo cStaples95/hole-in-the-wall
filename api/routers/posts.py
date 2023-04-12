@@ -59,3 +59,4 @@ def count_all_other_posts(db: Session = Depends(database.get_db),
                     current_user: schemas.User = Depends(authentication.get_current_user)):
     return crud.count_all_other_posts(db=db, userID=current_user.UserID)
 
+

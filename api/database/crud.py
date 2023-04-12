@@ -4,7 +4,7 @@ import bcrypt
 from passlib.context import CryptContext
 from .database import models
 import schemas
-
+import random
 # Casey Staples
 
 # Get user functions
@@ -33,8 +33,8 @@ def get_user_by_userID(db: Session, userID: int):
 
 def create_user(db: Session, user: schemas.UserCreate):
     hashed_password = bcrypt.hashpw(
-        user.password.encode('utf-8'), bcrypt.gensalt())
-    db_user = models.User(username=user.Username.lower(),
+        user.Password.encode('utf-8'), bcrypt.gensalt())
+    db_user = models.User(Username=user.Username.lower(),
                           Password=hashed_password, Email=user.Email, Deleted=False)
     db.add(db_user)
     db.commit()
@@ -66,15 +66,20 @@ def delete_all_users(db: Session):
 
 # Profile functions
 
-def create_new_profile(db: Session, profile: schemas.ProfileCreate, username: str):
-    db_profile = models.Profile(Username=username, Bio=profile.Bio, Picture=profile.Picture, userID=profile.UserID)
+def create_new_profile(db: Session, profile: schemas.ProfileCreate):
+    db_profile = models.Profile(Bio=profile.Bio, Picture=profile.Picture, UserID=profile.UserID)
     db.add(db_profile)
     db.commit()
     return 
 
 # Get all the profiles and the username from the user table that created the profile
-def get_all_profiles(db: Session):
-    return db.query(models.Profile).join(models.User).all()
+def get_all_profiles(db: Session) -> List[schemas.ProfileReturn]:
+    results = []
+    profiles = db.query(models.Profile).all()
+    for p in profiles:
+        user = get_user_by_userID(db, p.UserID)
+        results.append(schemas.ProfileReturn(Username=user.Username, Bio=p.Bio, Picture=p.Picture, UserID=p.UserID))
+    return results
 
 def delete_all_profiles(db: Session):
     try:
@@ -91,23 +96,29 @@ def create_new_post(db: Session, post: schemas.PostCreate):
                            Location = post.Location, UserID = post.UserID)
     db.add(db_post)
     db.commit()
-    return db.query(models.Post).filter(models.Post.userID == post.userID).order_by(models.Post.DatePosted.desc()).first()
+    return db.query(models.Post).filter(models.Post.UserID == post.UserID).order_by(models.Post.DatePosted.desc()).first()
 
 
 # Get all of my posts with all of their comments
-def get_all_my_posts_with_comments(db: Session, userID: int) -> schemas.Post:
-    results = schemas.Post
+def get_all_my_posts_with_comments(db: Session, userID: int) -> List[schemas.Post]:
+    results = []
+    comments_list = []
     posts = db.query(models.Post).filter(models.Post.UserID == userID).all()
+    index = 0
     for p in posts: 
         comments = db.query(models.Comments).filter(models.Comments.PostID == p.PostID).all()
+        comments_list.append(comments)
     for p in posts :
-        results = schemas.Post(Title=p.Title, Description=p.Description, DatePosted=p.DatePosted, Location=p.Location, UserID=p.UserID, PostID=p.PostID, Comments = c)
+        results.append(schemas.Post(Title=p.Title, Description=p.Description, DatePosted=p.DatePosted, Location=p.Location, UserID=p.UserID, PostID=p.PostID, Comments = comments_list[index]))
+        index += 1
     return results
 
 
 # Get my posts with all the comments and the user who posted the comment
 def get_my_posts_with_comments(db: Session, userID: int) -> schemas.Post:
-    posts = db.query(models.Post).filter(models.Post.UserID == userID).first()
+    count = db.query(models.Post).filter(models.Post.UserID == userID).count()
+    randomnum = random.randint(1, (count - 1))
+    posts = db.query(models.Post).filter(models.Post.UserID == userID).order_by(models.Post.DatePosted.desc()).limit(1).offset(randomnum).first()
     comments = db.query(models.Comments).filter(models.Comments.PostID == posts.PostID).all()
     return schemas.Post(Title=posts.Title, Description=posts.Description, DatePosted=posts.DatePosted, Location=posts.Location, UserID=posts.UserID, PostID=posts.PostID, Comments=comments)
 

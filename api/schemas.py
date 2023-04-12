@@ -72,7 +72,6 @@ class UserDelete(User):
 
 # got rid of firstname, lastname and dob added bio and picture (picture is str until we figure out how to add image)
 class ProfileBase(BaseModel):
-    Username: UserBase
     Bio: Union[str, None] = None # Made bio optional to allow for auto profile creation - Casey Staples
     Picture: Union[str, None] = None # Made picture optional until we figure out how to add image - Casey Staples
     class Config:
@@ -80,6 +79,11 @@ class ProfileBase(BaseModel):
 
 class ProfileCreate(ProfileBase):
     UserID: Union[str, None] = None
+
+class ProfileReturn(ProfileBase):
+    Username: str
+    class Config:
+        orm_mode = True
 
 class Profile(ProfileBase):
     ProfileID: int
@@ -123,7 +127,7 @@ class PostBase(BaseModel):
     DatePosted = datetime.datetime.now()
     # Optional fields
     Location: Union[str, None] = None
-    Comments: List[Union[CommentBase, None]] = [] # Comments not implemented yet - Casey Staples
+    Comments: List[Union[CommentBase, None]] = []
 
     class Config:
         orm_mode = True
