@@ -58,7 +58,7 @@ def authenticate_user(db: Session, username: str, password: str):
     user = crud.get_user_by_username(db, username)
     if not user:
         return False
-    if not verify_password(password, user.password):
+    if not verify_password(password, user.Password):
         return False
     return True
 
@@ -75,12 +75,12 @@ def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_
         if username is None:
             raise credentials_exception
         
-        token_data = schemas.TokenData(username=username)
+        token_data = schemas.TokenData(Username=username)
 
     except JWTError:
         raise credentials_exception
     
-    user = crud.get_user_by_username(db, username=token_data.username)
+    user = crud.get_user_by_username(db, username=token_data.Username)
     if user is None:
         raise credentials_exception
     return user

@@ -2,42 +2,43 @@ import datetime
 from typing import List, Union
 from pydantic import BaseModel, EmailStr
 
-# Casey Staples
+# Casey Staples and Jonathan White
 # V .01
 # File for json schemas using pydantic
+# Union[type, None] = None is used to make fields optional (Since we're using older python)
 
 # Token models -----------------------------------------------------------
 
 
 class Token(BaseModel):
-    access_token: str
-    token_type: str
+    Access_token: str
+    Token_type: str
 
 
 class TokenData(BaseModel):
-    username: Union[str, None] = None
+    Username: Union[str, None] = None
 
 
 class EmailSchema(BaseModel):
-    email: List[EmailStr]
+    Email: List[EmailStr]
                 
 # User models--------------------------------------------------------------
 
 
 class UserBase(BaseModel):
-    username: str
+    Username: str
 
     class Config:
         orm_mode = True
 
 
 class UserCreate(UserBase):
-    password: str
-    email: str
+    Password: str
+    Email: str
 
 
 class UserLogin(UserBase):
-    password: str
+    Password: str
 
 
 class UserChangePassword(BaseModel):
@@ -51,89 +52,176 @@ class UserChangeEmail(BaseModel):
 
 
 class UserSettings(BaseModel):
-    comments_notifs: bool
-    follow_notifs: bool
+    CommentsNotifs: bool
+    FollowNotifs: bool
 
 
 class User(UserBase):
-    userID: int
-    email: str
-    deleted: bool
+    UserID: int
+    Email: str
+    Deleted: bool
 
     class Config:
         orm_mode = True
 
 
 class UserDelete(User):
-    deleted = True
+    Deleted = True
 
 # Profile models-----------------------------------------------------------
 
-
+# got rid of firstname, lastname and dob added bio and picture (picture is str until we figure out how to add image)
 class ProfileBase(BaseModel):
-    firstName: str
-    lastName: str
-    DOB: str
-
+    Bio: Union[str, None] = None # Made bio optional to allow for auto profile creation - Casey Staples
+    Picture: Union[str, None] = None # Made picture optional until we figure out how to add image - Casey Staples
     class Config:
         orm_mode = True
 
 class ProfileCreate(ProfileBase):
-    userID: Union[str, None] = None
+    UserID: Union[str, None] = None
+
+class ProfileReturn(ProfileBase):
+    Username: str
+    class Config:
+        orm_mode = True
 
 class Profile(ProfileBase):
-    profileID: int
-    userID: int
-    DOB: str
+    ProfileID: int
+    UserID: int
 
     class Config:
         orm_mode = True
 
-# Post models--------------------------------------------------------------
-
-
-class PostBase(BaseModel):
-    Title: str
-    Content: str
-    DatePosted = datetime.datetime.now()
-    # Optional
-    Location: Union[str, None] = None
-
-    class Config:
-        orm_mode = True
-
-class Post(PostBase):
-    userID: int
-
-    class Config:
-        orm_mode = True
-
-class PostCreate(PostBase):
-    userID: Union[str, None] = None
-
-class PostDelete(Post):
-    pass
 
 # Comment models-----------------------------------------------------------
 
 
 class CommentBase(BaseModel):
-    Content: str
-    DatePosted = datetime.datetime.now()
+    Comment: str
+    DateCommented = datetime.datetime.now()
 
-
-class CommentCreate(CommentBase):
-    pass
+    class Config:
+        orm_mode = True
 
 
 class Comment(CommentBase):
-    id: int
+    CommentID: int
     UserID: int
     PostID: int
 
     class Config:
         orm_mode = True
 
+class CommentCreate(CommentBase):
+    UserID: Union[int, None] = None
+    PostID: Union[int, None] = None
 
 class CommentDelete(Comment):
+    pass
+
+# Post models--------------------------------------------------------------
+
+class PostBase(BaseModel):
+    Title: str
+    Description: str
+    DatePosted = datetime.datetime.now()
+    # Optional fields
+    Location: Union[str, None] = None
+    Comments: List[Union[CommentBase, None]] = []
+
+    class Config:
+        orm_mode = True
+
+class Post(PostBase):
+    UserID: int
+    PostID :int
+
+    class Config:
+        orm_mode = True
+
+class PostCreate(PostBase):
+    UserID: Union[str, None] = None
+
+class PostDelete(Post):
+    pass
+
+
+# Group models -Jonathan White----------------------------------------------------------
+
+class GroupBase(BaseModel):
+    GroupName: str
+
+class GroupCreate(GroupBase):
+    pass
+
+class Group(GroupBase):
+    GroupID: int
+    HangoutID: int
+    
+    class Config:
+        orm_mode = True
+
+class GroupDelete(Group):
+    pass
+
+# Might be useful to bring back the Group name
+#  And List of users in the group - Casey Staples
+class GroupMemberList(GroupBase):
+    GroupMembers: List[UserBase] = []
+
+    class Config:
+        orm_mode = True
+
+class GroupMemberBase(BaseModel):
+    GroupMemberID: int
+
+    class Config:
+        orm_mode = True
+
+class GroupMember(GroupMemberBase):
+    UserID: int
+    GroupID: int
+
+    class Config:
+        orm_mode = True
+
+
+# Friends models -Jonathan White----------------------------------------------------------
+
+class FriendsBase(BaseModel):
+    FriendshipID: int
+
+
+class Friends(FriendsBase):
+    FriendUserID: int
+    UserID: int
+
+    class Config:
+        orm_mode = True
+
+# Test model, might be useful to bring back all the friends of a user - Casey Staples
+class FriendsList(BaseModel):
+    Friends: List[UserBase] = []
+
+    class Config:
+        orm_mode = True
+
+# Hangout models -Jonathan White----------------------------------------------------------
+
+class HangoutBase(BaseModel):
+    HangoutName: str
+    Date: str
+    Votes: int
+
+class HangoutCreate(HangoutBase):
+    pass
+
+class Hangout(HangoutBase):
+    HangoutID: int
+    GroupID: int
+
+    class Config:
+        orm_mode = True
+
+class HangoutDelete(Hangout):
     pass

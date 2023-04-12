@@ -24,7 +24,7 @@ def login(UserLogin: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 # Create User
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
-    db_user = crud.get_user_by_username(db, user.username.lower())
+    db_user = crud.get_user_by_username(db, user.Username.lower())
     if db_user is not None:
         raise HTTPException(
             status_code=409, detail="Username already registered")
