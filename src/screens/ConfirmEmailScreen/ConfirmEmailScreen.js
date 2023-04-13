@@ -74,9 +74,15 @@ const ConfirmEmailScreen = () => {
 
   const onResendVerificationPressed = () => {
     {
+      const email = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(getData("email"));
+        }, 1000);
+      });
+
       axios
         .post("http://localhost:8000/emails/sendemail", {
-          email: ["akewlhipzter@gmail.com"],
+          Email: [email],
         })
         .then((response) => {
           console.log(response);
