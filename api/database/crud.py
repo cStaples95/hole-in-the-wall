@@ -78,8 +78,20 @@ def get_all_profiles(db: Session) -> List[schemas.ProfileReturn]:
     profiles = db.query(models.Profile).all()
     for p in profiles:
         user = get_user_by_userID(db, p.UserID)
-        results.append(schemas.ProfileReturn(Username=user.Username, Bio=p.Bio, Picture=p.Picture, UserID=p.UserID))
+        results.append(schemas.ProfileReturn(Username=user.Username, Bio=p.Bio, Picture=p.Picture))
     return results
+
+# Get a profile from a profile id
+def get_profile_from_id(db: Session, profile_id: int) -> schemas.ProfileReturn:
+    profile = db.query(models.Profile).filter(models.Profile.ProfileID == profile_id).first()
+    user = get_user_by_userID(db, profile.UserID)
+    return schemas.ProfileReturn(Username=user.Username, Bio=profile.Bio, Picture=profile.Picture)
+
+# get a profile from a user id
+def get_profile_from_userid(db: Session, userid: int) -> schemas.ProfileReturn:
+    profile = db.query(models.Profile).filter(models.Profile.UserID == userid).first()
+    user = get_user_by_userID(db, profile.UserID)
+    return schemas.ProfileReturn(Username=user.Username, Bio=profile.Bio, Picture=profile.Picture)
 
 def delete_all_profiles(db: Session):
     try:
