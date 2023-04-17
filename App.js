@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Navigation from "./src/navigation";
-import Navbar from "./src/navigation";
+import Navbar from "./src/navigation/navbar";
 
 export default function App() {
   return (

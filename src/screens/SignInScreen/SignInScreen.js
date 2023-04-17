@@ -50,7 +50,8 @@ const SignInScreen = () => {
       form_data.append("username", username);
       form_data.append("password", password);
 
-      axios
+      navigation.navigate("Home Screen");
+      axios 
         .post("http://localhost:8000/users/login", form_data)
         .then((response) => {
           console.log(response);
