@@ -32,10 +32,10 @@ const Tag = ({ tag }) => {
 
 const ProfileScreen = ({ navigation }) => {
   const [profile_name, set_profile_name] = useState(
-    "Mike Shitty at programming jones"
+    "Default"
   );
-  const [profile_bio, set_profile_bio] = useState("I'm a shitty programmer");
-  const [profile_location, set_profile_location] = useState("my moms basement");
+  const [profile_bio, set_profile_bio] = useState("Default");
+  const [profile_location, set_profile_location] = useState("Default");
 
   axios
     .get("http://127.0.0.1:8000/profiles/get/1")
