@@ -28,7 +28,7 @@ const BottomNavBar = () => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.navBarItem}
-        onPress={() => navigateToScreen("Create Post")}
+        onPress={() => navigateToScreen("Create Post Screen")}
       >
         <Ionicons name="add-circle-outline" size={24} color="black" />
         <Text style={styles.navBarText}>Create Post</Text>
