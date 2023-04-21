@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, StatusBar, Image, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import styled from "styled-components/native";
+import BottomNavBar from "../../components/BottomNavBar/BottomNavBar";
 import axios from "axios";
 
 const Tag = ({ tag }) => {

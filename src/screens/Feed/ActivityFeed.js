@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import { Text, View, StatusBar, FlatList } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import styled from "styled-components/native";
+import BottomNavBar from "../../components/BottomNavBar/BottomNavBar";
 import axios from "axios";
 
 const ActivityFeed = ({ navigation }) => {
   const [data, setData] = useState(
     new Array(10).fill({
-      Title: "Shitty programmer Mike Jones",
-      Description: "I am a shitty programmer",
-      Location: "My moms basement",
+      Title: ""
+      Description: "",
+      Location: "",
       Comments: [],
       DatePosted: "2021-03-01",
       UserID: 0,
@@ -70,16 +71,12 @@ const ActivityFeed = ({ navigation }) => {
   return (
     <Container>
       <StatusBar hidden={true} />
-      <NavBar>
-        <Icon source={{ uri: "../../../assets/images/menu_icon.png" }} />
-        <Title>{"ACTIVITY FEED"}</Title>
-        <Icon source={{ uri: "../../../assets/images/search_icon.png" }} />
-      </NavBar>
       <FlatList
         keyExtractor={(_, index) => "" + index}
         data={data}
         renderItem={_renderItem}
       />
+      <BottomNavBar />
     </Container>
   );
 };
@@ -87,13 +84,6 @@ const ActivityFeed = ({ navigation }) => {
 const Container = styled.View`
   flex: 1;
   background-color: #f1f9ff;
-`;
-const NavBar = styled.View`
-  height: 76px;
-  margin: 0px 16px;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
 `;
 const Icon = styled.Image`
   width: 16px;

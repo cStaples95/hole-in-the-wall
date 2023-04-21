@@ -1,5 +1,1 @@
-import ActivityFeed from './ActivityFeed';
-
-export {
-  ActivityFeed
-};
+export {default} from './ActivityFeed';
