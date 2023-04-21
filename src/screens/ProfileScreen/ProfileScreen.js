@@ -4,22 +4,6 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import styled from "styled-components/native";
 import axios from "axios";
 
-const NavBar = ({ navigation }) => {
-  return (
-    <NavBarView>
-      <Image
-        source={require("../../../assets/images/menu_icon.png")}
-        style={{ width: 16, height: 16 }}
-      />
-      <Text bold>PROFILE</Text>
-      <Image
-        source={require("../../../assets/images/search_icon.png")}
-        style={{ width: 16, height: 16 }}
-      />
-    </NavBarView>
-  );
-};
-
 const Tag = ({ tag }) => {
   return (
     <TagBox>
@@ -30,7 +14,7 @@ const Tag = ({ tag }) => {
   );
 };
 
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = () => {
   const [profile_name, set_profile_name] = useState(
     "Default"
   );
@@ -51,7 +35,6 @@ const ProfileScreen = ({ navigation }) => {
   return (
     <Container>
       <StatusBar hidden={true} />
-      <NavBar navigation={navigation} />
       <ScrollView contentContainerStyle={{ alignItems: "center" }}>
         <AvatarView>
           <Image
