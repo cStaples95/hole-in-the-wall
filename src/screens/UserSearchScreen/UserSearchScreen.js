@@ -7,7 +7,7 @@ const UserSearchScreen = () => {
 
   const onPressedUserSearch = () => {
     // Implement search logic using userSearch
-    Alert.alert(`Searching for: ${userSearch}`);
+    console.log(`Searching for: ${userSearch}`);
   };
 
   return (
