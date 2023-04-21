@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, StatusBar, Image, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import styled from "styled-components/native";
@@ -30,33 +30,24 @@ const Tag = ({ tag }) => {
   );
 };
 
-var profile_bio = "Testing from outside api";
-var profile_name = "Default name";
-var profile_location = "New York, NY";
-
 const ProfileScreen = ({ navigation }) => {
-  new Promise((resolve, reject) => {
-    axios
-      .get("http://127.0.0.1:8000/profiles/get/1")
-      .then((response) => {
-        profile_name = response.data.Username;
-        console.log("The name is " + profile_name);
-        profile_bio = response.data.Bio;
-        console.log("The bio is " + profile_bio);
-        profile_location = "Test";
-        setTimeout(() => {
-          resolve(
-            (profile_bio = response.data.Bio),
-            (profile_name = response.data.Username),
-            (profile_location = "New Location From API")
-          );
-        }, 1000);
-      })
-      .catch((error) => {
-        console.log(error);
-        reject();
-      });
-  });
+  const [profile_name, set_profile_name] = useState(
+    "Mike Shitty at programming jones"
+  );
+  const [profile_bio, set_profile_bio] = useState("I'm a shitty programmer");
+  const [profile_location, set_profile_location] = useState("my moms basement");
+
+  axios
+    .get("http://127.0.0.1:8000/profiles/get/1")
+    .then((response) => {
+      console.log(response.data);
+      set_profile_name(response.data.Username);
+      set_profile_bio(response.data.Bio);
+    })
+    .catch((error) => {
+      console.log(error);
+    }, []);
+
   return (
     <Container>
       <StatusBar hidden={true} />

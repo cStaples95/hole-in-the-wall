@@ -166,6 +166,10 @@ def get_feed(db: Session, userID: int, skip: int = 0, limit: int = 10):
     return db.query(models.Post).filter(models.Post.UserID != userID).offset(skip).limit(limit).all()
 
 
+# Get 10 posts
+def get_ten_posts(db: Session):
+    return db.query(models.Post).order_by(models.Post.DatePosted.desc()).limit(10).all()
+
 # Comment functions 
 
 def create_new_comment(db: Session, comment: schemas.CommentCreate):

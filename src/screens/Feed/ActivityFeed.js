@@ -1,58 +1,85 @@
-import React, { useState } from 'react';
-import { Text, View, StatusBar, FlatList } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import styled from 'styled-components/native';
+import React, { useState } from "react";
+import { Text, View, StatusBar, FlatList } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import styled from "styled-components/native";
+import axios from "axios";
 
 const ActivityFeed = ({ navigation }) => {
+  const [data, setData] = useState(
+    new Array(10).fill({
+      Title: "Shitty programmer Mike Jones",
+      Description: "I am a shitty programmer",
+      Location: "My moms basement",
+      Comments: [],
+      DatePosted: "2021-03-01",
+      UserID: 0,
+      PostID: 0,
+      avatar: require("../../../assets/images/avatar.png"),
+    })
+  );
 
-  const [data, setData] = useState(new Array(10).fill({
-    id: 1,
-    userName: 'Name Surname',
-    avatar: require('../../../assets/images/avatar.png'),
-    content: 'Eiusmod tempor quis ex aliquip non ipsum minim reprehenderit esse quis deserunt eiusmod proident id. Aliqua laborum pariatu...',
-    timeAgo: '1h ago'
-  }));
+  axios
+    .get("http://127.0.0.1:8000/posts/ten")
+    .then((response) => {
+      console.log(response.data);
+      setData(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    }, []);
 
-  const _renderItem = ({item, index}) => {
+  const _renderItem = ({ item, index }) => {
     return (
       <Card>
         <CardContent>
           <Header>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Avatar source={item.avatar} />
-              <UserName>{item.userName}</UserName>
+              <UserName>{item.UserID}</UserName>
             </View>
-            <Time>{item.timeAgo}</Time>
+            <Time>{item.DatePosted}</Time>
           </Header>
           <Content>
-            <ContentText>{item.content}</ContentText>
+            <ContentText>{item.Description}</ContentText>
           </Content>
           <Image></Image>
           <Footer>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Icon source={require('../../../assets/images/like_icon.png')}/>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Icon source={require("../../../assets/images/like_icon.png")} />
               <Number>609</Number>
-              <View style={{flexDirection: 'row', alignItems: 'center', marginLeft: 32}}>
-                <Icon source={require('../../../assets/images/comments_icon.png')}/>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginLeft: 32,
+                }}
+              >
+                <Icon
+                  source={require("../../../assets/images/comments_icon.png")}
+                />
                 <Number>120</Number>
               </View>
             </View>
-            <Share>{'SHARE'}</Share>
+            <Share>{"SHARE"}</Share>
           </Footer>
         </CardContent>
       </Card>
-    )
-  }
+    );
+  };
 
   return (
     <Container>
       <StatusBar hidden={true} />
       <NavBar>
-        <Icon source={{uri: '../../../assets/images/menu_icon.png'}}/>
-        <Title>{'ACTIVITY FEED'}</Title>
-        <Icon source={{uri: '../../../assets/images/search_icon.png'}}/>
+        <Icon source={{ uri: "../../../assets/images/menu_icon.png" }} />
+        <Title>{"ACTIVITY FEED"}</Title>
+        <Icon source={{ uri: "../../../assets/images/search_icon.png" }} />
       </NavBar>
-      <FlatList keyExtractor={(_, index) => ''+index} data={data} renderItem={_renderItem}/>
+      <FlatList
+        keyExtractor={(_, index) => "" + index}
+        data={data}
+        renderItem={_renderItem}
+      />
     </Container>
   );
 };
@@ -118,7 +145,7 @@ const ContentText = styled.Text`
 `;
 const Image = styled.View`
   height: 170px;
-  background-color: #BCE0FD;
+  background-color: #bce0fd;
 `;
 const Footer = styled.View`
   margin-top: 32px;

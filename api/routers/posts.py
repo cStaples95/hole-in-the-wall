@@ -60,3 +60,7 @@ def count_all_other_posts(db: Session = Depends(database.get_db),
     return crud.count_all_other_posts(db=db, userID=current_user.UserID)
 
 
+# Get 10 posts
+@router.get("/ten", response_model=List[schemas.Post])
+def get_ten_posts(db: Session = Depends(database.get_db)):
+    return crud.get_ten_posts(db=db)
