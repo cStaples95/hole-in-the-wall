@@ -78,8 +78,20 @@ def get_all_profiles(db: Session) -> List[schemas.ProfileReturn]:
     profiles = db.query(models.Profile).all()
     for p in profiles:
         user = get_user_by_userID(db, p.UserID)
-        results.append(schemas.ProfileReturn(Username=user.Username, Bio=p.Bio, Picture=p.Picture, UserID=p.UserID))
+        results.append(schemas.ProfileReturn(Username=user.Username, Bio=p.Bio, Picture=p.Picture))
     return results
+
+# Get a profile from a profile id
+def get_profile_from_id(db: Session, profile_id: int) -> schemas.ProfileReturn:
+    profile = db.query(models.Profile).filter(models.Profile.ProfileID == profile_id).first()
+    user = get_user_by_userID(db, profile.UserID)
+    return schemas.ProfileReturn(Username=user.Username, Bio=profile.Bio, Picture=profile.Picture)
+
+# get a profile from a user id
+def get_profile_from_userid(db: Session, userid: int) -> schemas.ProfileReturn:
+    profile = db.query(models.Profile).filter(models.Profile.UserID == userid).first()
+    user = get_user_by_userID(db, profile.UserID)
+    return schemas.ProfileReturn(Username=user.Username, Bio=profile.Bio, Picture=profile.Picture)
 
 def delete_all_profiles(db: Session):
     try:
@@ -153,6 +165,10 @@ def count_all_other_posts(db: Session, userID: int):
 def get_feed(db: Session, userID: int, skip: int = 0, limit: int = 10):
     return db.query(models.Post).filter(models.Post.UserID != userID).offset(skip).limit(limit).all()
 
+
+# Get 10 posts
+def get_ten_posts(db: Session):
+    return db.query(models.Post).order_by(models.Post.DatePosted.desc()).limit(10).all()
 
 # Comment functions 
 

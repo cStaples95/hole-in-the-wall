@@ -10,7 +10,7 @@ router = APIRouter()
 @router.post("/create" , status_code= status.HTTP_201_CREATED, response_model=schemas.PostBase)
 def create_post(post: schemas.PostCreate, db: Session = Depends(database.get_db),
                  current_user: schemas.User = Depends(authentication.get_current_user)):
-    post.userID = current_user.UserID
+    post.UserID = current_user.UserID
     return crud.create_new_post(db=db, post=post)
 
 # Get my Posts with comments
@@ -60,3 +60,7 @@ def count_all_other_posts(db: Session = Depends(database.get_db),
     return crud.count_all_other_posts(db=db, userID=current_user.UserID)
 
 
+# Get 10 posts
+@router.get("/ten", response_model=List[schemas.Post])
+def get_ten_posts(db: Session = Depends(database.get_db)):
+    return crud.get_ten_posts(db=db)
