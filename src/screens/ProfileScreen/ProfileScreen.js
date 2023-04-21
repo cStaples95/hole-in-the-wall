@@ -144,6 +144,7 @@ const ProfileScreen = ({ navigation }) => {
           </View>
         </TeamView>
       </ScrollView>
+     <BottomNavBar />
     </Container>
   );
 };
