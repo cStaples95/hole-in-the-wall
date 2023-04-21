@@ -1,21 +1,64 @@
 import React from 'react';
-import {BrowserRouter, Routes, Route } from "react-router-dom";
-import HomeScreen from "../screens/HomeScreen";
-import ProfileScreen from "../screens/ProfileScreen";
-import GroupScreen from "../screens/GroupScreen";
+import { Nav, NavItem} from 'reactstrap';
+import { NavLink } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch, faHome, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
-function Navbar() {
+const tabs = [{
+  route: "/home",
+  icon: faHome,
+  label: "Home"
+},{
+  route: "/search",
+  icon: faSearch,
+  label: "Search"
+},{
+  route: "/login",
+  icon: faUserCircle,
+  label: "Login"
+}]
+
+const Navbar = (props) => {
+
   return (
     <div>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/home" exact component={HomeScreen} />
-          <Route path="/search" exact component={ProfileScreen} />
-          <Route path="/groups" exact component={GroupScreen} />
-        </Routes>
-      </BrowserRouter>
+      <nav className="navbar navbar-expand-md navbar-light d-none d-lg-block sticky-top" role="navigation">
+        <div className="container-fluid">
+            <a className="navbar-brand" href="/home">Home</a>
+            <Nav className="ml-auto">
+              <NavItem>
+                <NavLink to="/groups" className="nav-link">
+                  Groups
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink to="/profile" className="nav-link">
+                  Profile
+                </NavLink>
+              </NavItem>
+            </Nav>
+        </div>
+      </nav>
+    <nav className="navbar fixed-bottom navbar-light d-block d-lg-none bottom-tab-nav" role="navigation">
+      <Nav className="w-100">
+        <div className=" d-flex flex-row justify-content-around w-100">
+          {
+            tabs.map((tab, index) =>(
+              <NavItem key={`tab-${index}`}>
+                <NavLink to={tab.route} className="nav-link bottom-nav-link" activeClassName="active">
+                  <div className="row d-flex flex-column justify-content-center align-items-center">
+                    <FontAwesomeIcon size="lg" icon={tab.icon}/>
+                    <div className="bottom-tab-label">{tab.label}</div>
+                  </div>
+                </NavLink>
+              </NavItem>
+            ))
+          }
+        </div>
+      </Nav>
+    </nav>
     </div>
-  );
-}
+  )
+};
 
 export default Navbar;
