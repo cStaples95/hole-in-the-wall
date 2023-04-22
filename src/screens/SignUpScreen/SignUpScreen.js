@@ -26,7 +26,7 @@ const SignUpScreen = () => {
   const storeData = async (key, value) => {
     try {
       await AsyncStorage.setItem(key, value);
-      alert("Token saved");
+      alert(value + "saved");
     } catch (e) {
       // saving error
       console.log("Error saving data" + e);
@@ -47,6 +47,7 @@ const SignUpScreen = () => {
         .then((response) => {
           console.log(response);
           if (response.status === 201) {
+            storeData("username", username);
             alert("Registration successful");
             storeData("email", email);
           }
@@ -61,8 +62,7 @@ const SignUpScreen = () => {
               if (response.status === 200) {
                 alert("Email sent");
                 console.log("The code is " + response.data);
-                let code = response.data;
-                storeData("email-code", code);
+                storeData("email-code", response.data);
                 navigation.navigate("Confirm Email Screen");
               }
             })

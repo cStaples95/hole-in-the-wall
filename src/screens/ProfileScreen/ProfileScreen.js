@@ -4,7 +4,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import styled from "styled-components/native";
 import BottomNavBar from "../../components/BottomNavBar/BottomNavBar";
 import axios from "axios";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const Tag = ({ tag }) => {
   return (
     <TagBox>
@@ -15,23 +15,44 @@ const Tag = ({ tag }) => {
   );
 };
 
+const getData = async (key) => {
+  try {
+    const value = await AsyncStorage.getItem(key);
+    if (value !== null) {
+      alert(key + "retrieved");
+      return value;
+    }
+  } catch (e) {
+    // error reading value
+    console.log("Error reading data" + e);
+  }
+};
+
 const ProfileScreen = () => {
-  const [profile_name, set_profile_name] = useState(
-    "Default"
-  );
+  const [profile_name, set_profile_name] = useState("Default");
   const [profile_bio, set_profile_bio] = useState("Default");
   const [profile_location, set_profile_location] = useState("Default");
 
-  axios
-    .get("http://127.0.0.1:8000/profiles/get/1")
-    .then((response) => {
-      console.log(response.data);
-      set_profile_name(response.data.Username);
-      set_profile_bio(response.data.Bio);
-    })
-    .catch((error) => {
-      console.log(error);
-    }, []);
+  let token = new Promise((resolve, reject) => {
+    resolve(getData("token"));
+  });
+  token.then((value) => {
+    axios
+      .get("http://localhost:8000/profiles/mine", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${value}`,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        set_profile_name(response.data.Username);
+        set_profile_bio(response.data.Bio);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  });
 
   return (
     <Container>
@@ -128,7 +149,7 @@ const ProfileScreen = () => {
           </View>
         </TeamView>
       </ScrollView>
-     <BottomNavBar />
+      <BottomNavBar />
     </Container>
   );
 };

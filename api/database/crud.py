@@ -67,7 +67,8 @@ def delete_all_users(db: Session):
 # Profile functions
 
 def create_new_profile(db: Session, profile: schemas.ProfileCreate):
-    db_profile = models.Profile(Bio=profile.Bio, Picture=profile.Picture, UserID=profile.UserID)
+    db_profile_userid = get_user_by_username(db, profile.Username)
+    db_profile = models.Profile(Bio=profile.Bio, Picture=profile.Picture, UserID=db_profile_userid.UserID)
     db.add(db_profile)
     db.commit()
     return 
@@ -81,17 +82,24 @@ def get_all_profiles(db: Session) -> List[schemas.ProfileReturn]:
         results.append(schemas.ProfileReturn(Username=user.Username, Bio=p.Bio, Picture=p.Picture))
     return results
 
-# Get a profile from a profile id
+
 def get_profile_from_id(db: Session, profile_id: int) -> schemas.ProfileReturn:
     profile = db.query(models.Profile).filter(models.Profile.ProfileID == profile_id).first()
     user = get_user_by_userID(db, profile.UserID)
     return schemas.ProfileReturn(Username=user.Username, Bio=profile.Bio, Picture=profile.Picture)
 
-# get a profile from a user id
+
 def get_profile_from_userid(db: Session, userid: int) -> schemas.ProfileReturn:
     profile = db.query(models.Profile).filter(models.Profile.UserID == userid).first()
     user = get_user_by_userID(db, profile.UserID)
     return schemas.ProfileReturn(Username=user.Username, Bio=profile.Bio, Picture=profile.Picture)
+
+# get the profile from the username
+def get_profile_from_username(db: Session, username: str) -> schemas.ProfileReturn:
+    user = get_user_by_username(db, username)
+    profile = db.query(models.Profile).filter(models.Profile.UserID == user.UserID).first()
+    return schemas.ProfileReturn(Username=user.Username, Bio=profile.Bio, Picture=profile.Picture)
+
 
 def delete_all_profiles(db: Session):
     try:

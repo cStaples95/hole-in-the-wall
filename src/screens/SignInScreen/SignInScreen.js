@@ -23,7 +23,7 @@ const SignInScreen = () => {
   const storeData = async (key, value) => {
     try {
       await AsyncStorage.setItem(key, value);
-      alert("Token saved");
+      alert(value + "saved");
     } catch (e) {
       // saving error
       console.log("Error saving data" + e);
@@ -34,8 +34,8 @@ const SignInScreen = () => {
     try {
       const value = await AsyncStorage.getItem(key);
       if (value !== null) {
-        alert("Token retrieved");
-        console.log("The token is " + value);
+        alert(key + "retrieved");
+        console.log("The value is " + value);
         return value;
       }
     } catch (e) {

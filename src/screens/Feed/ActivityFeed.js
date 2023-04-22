@@ -5,10 +5,12 @@ import styled from "styled-components/native";
 import BottomNavBar from "../../components/BottomNavBar/BottomNavBar";
 import axios from "axios";
 
+let first_load = true;
+
 const ActivityFeed = ({ navigation }) => {
   const [data, setData] = useState(
     new Array(10).fill({
-      Title: ""
+      Title: "",
       Description: "",
       Location: "",
       Comments: [],
@@ -19,15 +21,17 @@ const ActivityFeed = ({ navigation }) => {
     })
   );
 
-  axios
-    .get("http://127.0.0.1:8000/posts/ten")
-    .then((response) => {
-      console.log(response.data);
-      setData(response.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    }, []);
+  setInterval(() => {
+    axios
+      .get("http://127.0.0.1:8000/posts/ten")
+      .then((response) => {
+        console.log(response.data);
+        setData(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      }, []);
+  }, 30000);
 
   const _renderItem = ({ item, index }) => {
     return (

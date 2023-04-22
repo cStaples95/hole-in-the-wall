@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Union
 from sqlalchemy.orm import Session
 import authentication, schemas
@@ -12,14 +13,14 @@ models.Base.metadata.create_all(bind=database.engine)
 # Main point of app
 app = FastAPI()
 
-# allow access form everywhere
-@app.middleware("http")
-async def add_process_time_header(request: Request, call_next):
-    response = await call_next(request)
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-    return response
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_headers=["*"],
+)
 
 app.include_router(users.router, prefix="/users", tags=["users"])
 app.include_router(email.router, prefix="/emails", tags=["emails"])

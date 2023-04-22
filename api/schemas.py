@@ -78,7 +78,7 @@ class ProfileBase(BaseModel):
         orm_mode = True
 
 class ProfileCreate(ProfileBase):
-    UserID: Union[str, None] = None
+    Username: str
 
 class ProfileReturn(ProfileBase):
     Username: str
