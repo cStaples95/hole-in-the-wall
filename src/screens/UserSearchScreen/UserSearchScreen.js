@@ -2,47 +2,69 @@ import React, { useState, useEffect } from "react";
 import { View, TextInput, Button, StyleSheet, Alert } from "react-native";
 import BottomNavBar from "../../components/BottomNavBar/BottomNavBar";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { color } from "react-native-reanimated";
+
+const storeData = async (value) => {
+  try {
+    await AsyncStorage.setItem("userToken", value);
+    alert(value + "saved");
+  } catch (e) {
+    // saving error
+    console.log("Error saving data" + e);
+  }
+};
 
 const UserSearchScreen = () => {
   const [nameList, setNameList] = useState([]);
-  const [search, setSearch] =useState("")
+  const [search, setSearch] = useState("");
 
-  useEffect(()=>{
-    axios
-      .get("http://127.0.0.1:8000/users/all")
-      .then((response) => {
-        console.log(response.data)
-        setNameList(response.data)
-      })}, []);
-   
-      
-const toProfile = (username) => {
-  alert('You clicked ' + username);
-}
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/users/all").then((response) => {
+      console.log(response.data);
+      setNameList(response.data);
+    });
+  }, []);
+
+  const toProfile = (username) => {
+    alert("You clicked " + username);
+    storeData("clicked_username", username);
+  };
 
   return (
     <div className="UserSearchScreen">
       <h1>User Search</h1>
-      <input type="text" placeholder="Type to search..." onChange={(e) => setSearch(e.target.value)}/>
-      {nameList.filter((item) => {
-        if (search===""){
-          return ""
-        }
-        else if(item.Username.toLowerCase().includes(search.toLowerCase())){
-          return item
-        }
-      })
+      <input
+        type="text"
+        placeholder="Type to search..."
+        onChange={(e) => setSearch(e.target.value)}
+      />
+      {nameList
+        .filter((item) => {
+          if (search === "") {
+            return "";
+          } else if (
+            item.Username.toLowerCase().includes(search.toLowerCase())
+          ) {
+            return item;
+          }
+        })
         .map((item) => {
-          return <div className="nameContainer" key={item.Username}> <button onClick={() => toProfile(item.Username)}>{item.Username}</button></div>
+          return (
+            <div className="nameContainer" key={item.Username}>
+              {" "}
+              <button onClick={() => toProfile(item.Username)}>
+                {item.Username}
+              </button>
+            </div>
+          );
         })}
-    <View style={styles.nav}>
-      <BottomNavBar/>
-    </View>
+      <View style={styles.nav}>
+        <BottomNavBar />
+      </View>
     </div>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -62,10 +84,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: "white",
     paddingHorizontal: 10,
-    marginBottom: 50
+    marginBottom: 50,
   },
-  
-  nav:{
+
+  nav: {
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
@@ -77,7 +99,7 @@ const styles = StyleSheet.create({
     right: 0,
     paddingLeft: 20,
     paddingRight: 20,
-  }
+  },
 });
 
 export default UserSearchScreen;
