@@ -8,7 +8,7 @@ import axios from "axios";
 const ActivityFeed = ({ navigation }) => {
   const [data, setData] = useState(
     new Array(10).fill({
-      Title: ""
+      Title: "",
       Description: "",
       Location: "",
       Comments: [],
