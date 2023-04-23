@@ -14,7 +14,7 @@ const BottomNavBar = () => {
     <View style={styles.bottomNavBarContainer}>
       <TouchableOpacity
         style={styles.navBarItem}
-        onPress={() => navigateToScreen("ActivityFeed Screen")}
+        onPress={() => navigateToScreen("Home Feed Screen")}
       >
         <Ionicons name="home" size={24} color="black" />
         <Text style={styles.navBarText}>Home</Text>

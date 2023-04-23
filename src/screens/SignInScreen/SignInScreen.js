@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   View,
-  Text,
   Image,
   StyleSheet,
   useWindowDimensions,
@@ -56,7 +55,7 @@ const SignInScreen = () => {
           console.log(response);
           if (response.status === 200) {
             alert("Login successful");
-            navigation.navigate("ActivityFeed Screen");
+            navigation.navigate("Home Feed Screen");
             // This will get chansged to a more secure method of storage after more research.
             console.log("The token is " + response.data.access_token);
             storeData("token", response.data.access_token);

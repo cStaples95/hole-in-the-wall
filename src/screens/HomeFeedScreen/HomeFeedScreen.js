@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { Text, View, StatusBar, FlatList } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { View, StatusBar, FlatList } from "react-native";
 import styled from "styled-components/native";
 import BottomNavBar from "../../components/BottomNavBar/BottomNavBar";
 import axios from "axios";
 
 let first_load = true;
 
-const ActivityFeed = ({ navigation }) => {
+const HomeFeedScreen = ({ navigation }) => {
   const [data, setData] = useState(
     new Array(10).fill({
       Title: "",
@@ -159,4 +158,4 @@ const Share = styled.Text`
   line-height: 24px;
   font-weight: bold;
 `;
-export default ActivityFeed;
+export default HomeFeedScreen;
