@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 import BottomNavBar from "../../components/BottomNavBar/BottomNavBar";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { color } from "react-native-reanimated";
+
 
 const storeData = async (value) => {
   try {
@@ -71,22 +71,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  searchInput: {
-    flex: 1,
-    marginRight: 8,
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    backgroundColor: "white",
-    paddingHorizontal: 10,
-    marginBottom: 50,
-  },
-
   nav: {
     flexDirection: "row",
     justifyContent: "space-around",
