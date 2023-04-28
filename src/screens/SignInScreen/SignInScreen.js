@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   View,
-  Text,
   Image,
   StyleSheet,
   useWindowDimensions,
@@ -23,7 +22,7 @@ const SignInScreen = () => {
   const storeData = async (key, value) => {
     try {
       await AsyncStorage.setItem(key, value);
-      alert("Token saved");
+      alert(value + "saved");
     } catch (e) {
       // saving error
       console.log("Error saving data" + e);
@@ -34,8 +33,8 @@ const SignInScreen = () => {
     try {
       const value = await AsyncStorage.getItem(key);
       if (value !== null) {
-        alert("Token retrieved");
-        console.log("The token is " + value);
+        alert(key + "retrieved");
+        console.log("The value is " + value);
         return value;
       }
     } catch (e) {
@@ -50,14 +49,14 @@ const SignInScreen = () => {
       form_data.append("username", username);
       form_data.append("password", password);
 
-      navigation.navigate("Home Screen");
+      navigation.navigate("Home Feed Screen");
       axios
         .post("http://localhost:8000/users/login", form_data)
         .then((response) => {
           console.log(response);
           if (response.status === 200) {
             alert("Login successful");
-            navigation.navigate("Home Screen");
+            navigation.navigate("Home Feed Screen");
             // This will get chansged to a more secure method of storage after more research.
             console.log("The token is " + response.data.access_token);
             storeData("token", response.data.access_token);

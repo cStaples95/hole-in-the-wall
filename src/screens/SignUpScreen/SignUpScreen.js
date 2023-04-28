@@ -23,6 +23,16 @@ const SignUpScreen = () => {
   const { height } = useWindowDimensions();
   const navigation = useNavigation();
 
+  const storeData = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, value);
+      alert(value + "saved");
+    } catch (e) {
+      // saving error
+      console.log("Error saving data" + e);
+    }
+  };
+
   const onRegisterPressed = () => {
     if (password !== passwordConfirm) {
       alert("Passwords do not match");
@@ -30,29 +40,29 @@ const SignUpScreen = () => {
     } else {
       axios
         .post("http://localhost:8000/users/register", {
-          email: email,
-          username: username,
-          password: password,
+          Username: username,
+          Password: password,
+          Email: email,
         })
         .then((response) => {
           console.log(response);
           if (response.status === 201) {
+            storeData("username", username);
             alert("Registration successful");
-            //navigation.navigate("Confirm Email Screen");
+            storeData("email", email);
           }
         })
         .then(() => {
           axios
             .post("http://localhost:8000/emails/sendemail", {
-              email: ["akewlhipzter@gmail.com"],
+              Email: [email],
             })
             .then((response) => {
               console.log(response);
               if (response.status === 200) {
                 alert("Email sent");
                 console.log("The code is " + response.data);
-                let code = response.data;
-                storeData("email-code", code);
+                storeData("email-code", response.data);
                 navigation.navigate("Confirm Email Screen");
               }
             })

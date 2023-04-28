@@ -17,24 +17,34 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const storeData = async (value) => {
   try {
     await AsyncStorage.setItem("userToken", value);
-    alert("Token saved");
+    alert(value + "saved");
   } catch (e) {
     // saving error
     console.log("Error saving data" + e);
   }
 };
 
-const getData = async () => {
+const getData = async (key) => {
   try {
-    const value = await AsyncStorage.getItem("userToken");
+    const value = await AsyncStorage.getItem(key);
     if (value !== null) {
-      alert("Token retrieved");
-      console.log("The token is " + value);
+      alert(key + "retrieved");
+      console.log("The value is " + value);
       return value;
     }
   } catch (e) {
     // error reading value
     console.log("Error reading data" + e);
+  }
+};
+
+const clearData = async () => {
+  try {
+    await AsyncStorage.clear();
+    alert("Data cleared");
+  } catch (e) {
+    // clear error
+    console.log("Error clearing data" + e);
   }
 };
 
@@ -57,7 +67,31 @@ const ConfirmEmailScreen = () => {
           console.log("The code is " + value);
           if (value === verificationCode) {
             alert("Email verified");
-            navigation.navigate("Sign In Screen");
+
+            try {
+              const username = new Promise((resolve, reject) => {
+                setTimeout(() => {
+                  resolve(getData("username"));
+                }, 1000);
+              });
+              username.then((value) => {
+                console.log("The username is " + value);
+                axios
+                  .post("http://localhost:8000/profiles/create", {
+                    Username: value,
+                  })
+                  .then((response) => {
+                    console.log(response);
+                    if (response.status === 200) {
+                      alert("Profile created");
+                      clearData();
+                      navigation.navigate("Sign In Screen");
+                    }
+                  });
+              });
+            } catch (error) {
+              console.log("Error: " + error);
+            }
           } else {
             alert("Invalid code");
           }
@@ -74,9 +108,15 @@ const ConfirmEmailScreen = () => {
 
   const onResendVerificationPressed = () => {
     {
+      const email = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(getData("email"));
+        }, 1000);
+      });
+
       axios
         .post("http://localhost:8000/emails/sendemail", {
-          email: ["akewlhipzter@gmail.com"],
+          Email: [email],
         })
         .then((response) => {
           console.log(response);

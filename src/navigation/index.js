@@ -1,17 +1,16 @@
 import React from "react";
-import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import {BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import SignInScreen from "../screens/SignInScreen";
 import SignUpScreen from "../screens/SignUpScreen";
 import ConfirmEmailScreen from "../screens/ConfirmEmailScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import NewPasswordScreen from "../screens/NewPasswordScreen";
-import HomeScreen from "../screens/HomeScreen";
+import HomeFeedScreen from "../screens/HomeFeedScreen/HomeFeedScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-import GroupScreen from "../screens/GroupScreen";
+import UserSearchScreen from "../screens/UserSearchScreen";
+import CreatePostScreen from "../screens/CreatePostScreen/CreatePostScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,23 +23,13 @@ const Navigation = () => {
         <Stack.Screen name="Confirm Email Screen" component={ConfirmEmailScreen} />
         <Stack.Screen name="Forgot Password Screen" component={ForgotPasswordScreen} />
         <Stack.Screen name="New Password Screen" component={NewPasswordScreen} />
-        <Stack.Screen name="Home Screen" component={HomeScreen} />
+        <Stack.Screen name="Home Feed Screen" component={HomeFeedScreen}/>
+        <Stack.Screen name="Profile Screen" component={ProfileScreen} />
+        <Stack.Screen name="User Search Screen" component={UserSearchScreen} />
+        <Stack.Screen name="Create Post Screen" component={CreatePostScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
-
-const Navbar = () => {
-  return (
-    <Router>
-      <Routes>
-        <Route path='/' exact component={HomeScreen} />
-        <Route path='/profile' exact component={ProfileScreen} />
-        <Route path='/gorups' exact component={GroupScreen} />
-      </Routes>
-      <navbar />
-    </Router>
-  )
-}
 
 export default Navigation;

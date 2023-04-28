@@ -42,7 +42,7 @@ async def send_mail(email: schemas.EmailSchema):
  
     message = MessageSchema(
         subject="Fastapi-Mail module",
-        recipients=email.dict().get("email"),
+        recipients=email.dict().get("Email"),
         body=template,
         subtype="html"
         )
