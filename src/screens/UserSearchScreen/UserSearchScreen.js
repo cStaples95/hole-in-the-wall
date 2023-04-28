@@ -3,7 +3,7 @@ import { View, StyleSheet, Alert } from "react-native";
 import BottomNavBar from "../../components/BottomNavBar/BottomNavBar";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { useNavigation } from "@react-navigation/native";
 
 const storeData = async (value) => {
   try {
@@ -18,6 +18,7 @@ const storeData = async (value) => {
 const UserSearchScreen = () => {
   const [nameList, setNameList] = useState([]);
   const [search, setSearch] = useState("");
+  const navigation = useNavigation();
 
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/users/all").then((response) => {
@@ -28,7 +29,8 @@ const UserSearchScreen = () => {
 
   const toProfile = (username) => {
     alert("You clicked " + username);
-    storeData("clicked_username", username);
+    storeData(username);
+    navigation.navigate("Selected Profile Screen");
   };
 
   return (

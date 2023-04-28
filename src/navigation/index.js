@@ -11,6 +11,8 @@ import HomeFeedScreen from "../screens/HomeFeedScreen/HomeFeedScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import UserSearchScreen from "../screens/UserSearchScreen";
 import CreatePostScreen from "../screens/CreatePostScreen/CreatePostScreen";
+import SelectedProfileScreen from "../screens/SelectedProfileScreen";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +29,7 @@ const Navigation = () => {
         <Stack.Screen name="Profile Screen" component={ProfileScreen} />
         <Stack.Screen name="User Search Screen" component={UserSearchScreen} />
         <Stack.Screen name="Create Post Screen" component={CreatePostScreen} />
+        <Stack.Screen name="Selected Profile Screen" component={SelectedProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
