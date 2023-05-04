@@ -49,7 +49,7 @@ const SignInScreen = () => {
       form_data.append("username", username);
       form_data.append("password", password);
 
-      navigation.navigate("Home Feed Screen");
+      // navigation.navigate("Home Feed Screen");
       axios
         .post("http://localhost:8000/users/login", form_data)
         .then((response) => {

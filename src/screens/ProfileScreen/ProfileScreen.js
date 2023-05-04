@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Dimensions } from 'react-native';
 import HomeFeedScreen from '../HomeFeedScreen/HomeFeedScreen';
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const getData = async (key) => {
   try {
