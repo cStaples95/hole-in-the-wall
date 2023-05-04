@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Dimensions } from 'react-native';
-import HomeFeedScreen from '../HomeFeedScreen/HomeFeedScreen';
+import BottomNavBar from "../../components/BottomNavBar/BottomNavBar";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -60,9 +60,9 @@ const ProfileScreen = () => {
         </View>
         <View style={styles.feed}>
           <Text style={styles.feedTitle}>My Posts</Text>
-          <HomeFeedScreen/>
         </View>
       </View>
+      <BottomNavBar />
     </View>
   );
 };
