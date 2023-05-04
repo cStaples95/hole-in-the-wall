@@ -1,8 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Dimensions } from 'react-native';
 import HomeFeedScreen from '../HomeFeedScreen/HomeFeedScreen';
+import axios from "axios";
+
+const getData = async (key) => {
+  try {
+    const value = await AsyncStorage.getItem(key);
+    if (value !== null) {
+      alert(key + "retrieved");
+      return value;
+    }
+  } catch (e) {
+    // error reading value
+    console.log("Error reading data" + e);
+  }
+};
 
 const ProfileScreen = () => {
+  const [profile_name, set_profile_name] = useState("Default");
+  const [profile_bio, set_profile_bio] = useState("Default");
+  const [profile_location, set_profile_location] = useState("Default");
+
+  let token = new Promise((resolve, reject) => {
+    resolve(getData("token"));
+  });
+  token.then((value) => {
+    axios
+      .get("http://localhost:8000/profiles/mine", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${value}`,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        set_profile_name(response.data.Username);
+        set_profile_bio(response.data.Bio);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  });
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -12,9 +51,9 @@ const ProfileScreen = () => {
         <View style={styles.profile}>
           <View style={styles.avatar} />
           <View style={styles.details}>
-            <Text style={styles.name}>John Doe</Text>
+            <Text style={styles.name}>{profile_name}</Text>
             <Text style={styles.bio}>
-              I am a foodie who loves to explore different cuisines and share my experiences with others.
+              {profile_bio}
             </Text>
           </View>
         </View>
