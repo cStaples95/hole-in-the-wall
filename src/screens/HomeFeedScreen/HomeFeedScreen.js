@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StatusBar, FlatList } from "react-native";
 import styled from "styled-components/native";
 import BottomNavBar from "../../components/BottomNavBar/BottomNavBar";
@@ -6,13 +6,73 @@ import axios from "axios";
 
 let first_load = true;
 
+const Comment = ({ UserID, Comment }) => {
+  return (
+    <Content>
+      <ContentText>{UserID}</ContentText>
+      <ContentText>{Comment}</ContentText>
+    </Content>
+  )
+}
+
+const ItemCard = ({ item, index }) => {
+  return (
+    <Card>
+      <CardContent>
+        <Header>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Avatar source={item.avatar} />
+            <UserName>{item.UserID}</UserName>
+          </View>
+          <Time>{item.DatePosted}</Time>
+        </Header>
+        <Content>
+          <ContentText>{item.Description}</ContentText>
+        </Content>
+        <Image></Image>
+        <Footer>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Icon source={require("../../../assets/images/like_icon.png")} />
+            <Number>609</Number>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginLeft: 32,
+              }}
+            >
+              <Icon
+                source={require("../../../assets/images/comments_icon.png")}
+              />
+              <Number>120</Number>
+            </View>
+          </View>
+          <Share>{"SHARE"}</Share>
+        </Footer>
+        <Footer>
+        <div style={{ border: '1px solid #2699fb', height: '50vh', width: '100vw' }}>
+  {item.Comments.map((comment) => (
+    <div style={{ border: '1px solid #2699fb', marginBottom: '10px' }}>
+      <Comment UserID={comment.UserID} Comment={comment.Comment} />
+    </div>
+  ))}
+</div>
+        </Footer>
+      </CardContent>
+    </Card>
+  );
+}
+
 const HomeFeedScreen = ({ navigation }) => {
   const [data, setData] = useState(
     new Array(10).fill({
       Title: "",
       Description: "",
       Location: "",
-      Comments: [],
+      Comments: [
+        {"UserID": "Mike", "Comment": "Hello there"},
+        {"UserID": "Luke", "Comment": "Hello Mike"}
+      ],
       DatePosted: "2021-03-01",
       UserID: 0,
       PostID: 0,
@@ -20,7 +80,7 @@ const HomeFeedScreen = ({ navigation }) => {
     })
   );
 
-  setInterval(() => {
+  useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/posts/ten")
       .then((response) => {
@@ -30,46 +90,7 @@ const HomeFeedScreen = ({ navigation }) => {
       .catch((error) => {
         console.log(error);
       }, []);
-  }, 30000);
-
-  const _renderItem = ({ item, index }) => {
-    return (
-      <Card>
-        <CardContent>
-          <Header>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Avatar source={item.avatar} />
-              <UserName>{item.UserID}</UserName>
-            </View>
-            <Time>{item.DatePosted}</Time>
-          </Header>
-          <Content>
-            <ContentText>{item.Description}</ContentText>
-          </Content>
-          <Image></Image>
-          <Footer>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Icon source={require("../../../assets/images/like_icon.png")} />
-              <Number>609</Number>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginLeft: 32,
-                }}
-              >
-                <Icon
-                  source={require("../../../assets/images/comments_icon.png")}
-                />
-                <Number>120</Number>
-              </View>
-            </View>
-            <Share>{"SHARE"}</Share>
-          </Footer>
-        </CardContent>
-      </Card>
-    );
-  };
+  }, []);
 
   return (
     <Container>
@@ -77,7 +98,7 @@ const HomeFeedScreen = ({ navigation }) => {
       <FlatList
         keyExtractor={(_, index) => "" + index}
         data={data}
-        renderItem={_renderItem}
+        renderItem={ItemCard}
       />
       <BottomNavBar />
     </Container>

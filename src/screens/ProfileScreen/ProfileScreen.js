@@ -1,18 +1,8 @@
-import React, { useState } from "react";
-import { View, StatusBar, Image, ScrollView } from "react-native";
-import styled from "styled-components/native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, View, Text, Dimensions } from 'react-native';
 import BottomNavBar from "../../components/BottomNavBar/BottomNavBar";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const Tag = ({ tag }) => {
-  return (
-    <TagBox>
-      <Text size="10px" style={{ paddingHorizontal: 14 }}>
-        {tag}
-      </Text>
-    </TagBox>
-  );
-};
 
 const getData = async (key) => {
   try {
@@ -54,173 +44,84 @@ const ProfileScreen = () => {
   });
 
   return (
-    <Container>
-      <StatusBar hidden={true} />
-      <ScrollView contentContainerStyle={{ alignItems: "center" }}>
-        <AvatarView>
-          <Image
-            source={require("../../../assets/images/avatar_white.png")}
-            style={{ width: 96, height: 96 }}
-          />
-        </AvatarView>
-        <ProfileView>
-          <View
-            style={{
-              marginBottom: 20,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <View>
-              <Text size="20px" bold style={{ marginTop: 16 }}>
-                {profile_name}
-              </Text>
-              <Text size="10px">{profile_location}</Text>
-            </View>
-            <FollowButton>
-              <Text size="10px" bold height="12px" color="#fff">
-                FOLLOW
-              </Text>
-            </FollowButton>
-          </View>
-          <Text size="14px" align="left">
-            {profile_bio}
-          </Text>
-        </ProfileView>
-        <SkillView>
-          <View
-            style={{
-              marginTop: 18,
-              marginLeft: 32,
-              marginRight: 32,
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
-            }}
-          >
-            <Text size="14px" bold>
-              TAGS
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Profile</Text>
+      </View>
+      <View style={styles.body}>
+        <View style={styles.profile}>
+          <View style={styles.avatar} />
+          <View style={styles.details}>
+            <Text style={styles.name}>{profile_name}</Text>
+            <Text style={styles.bio}>
+              {profile_bio}
             </Text>
-            <View
-              style={{
-                marginTop: 10,
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                flexWrap: "wrap",
-              }}
-            >
-              <Tag tag="Sushi" />
-              <Tag tag="Pizza" />
-              <Tag tag="Burgers" />
-              <Tag tag="American" />
-              <Tag tag="Japanese" />
-              <Tag tag="Chinese" />
-            </View>
           </View>
-        </SkillView>
-        <TeamView>
-          <View
-            style={{
-              marginTop: 18,
-              marginLeft: 32,
-              marginRight: 32,
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
-            }}
-          >
-            <Text size="14px" bold>
-              GROUPS
-            </Text>
-            <View
-              style={{
-                marginTop: 10,
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                flexWrap: "wrap",
-              }}
-            >
-              <Circle />
-              <Circle />
-              <Circle />
-            </View>
-          </View>
-        </TeamView>
-      </ScrollView>
+        </View>
+        <View style={styles.feed}>
+          <Text style={styles.feedTitle}>My Posts</Text>
+        </View>
+      </View>
       <BottomNavBar />
-    </Container>
+    </View>
   );
 };
 
-const Container = styled.View`
-  flex: 1;
-  background-color: #fff;
-`;
-const NavBarView = styled.View`
-  height: 76px;
-  margin: 0px 16px;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-const Text = styled.Text`
-  color: ${(props) => (props.color ? props.color : "#2699fb")};
-  font-size: ${(props) => (props.size ? props.size : "14px")};
-  line-height: ${(props) => (props.height ? props.height : "24px")};
-  font-weight: ${(props) => (props.bold ? "bold" : "normal")};
-  text-align: ${(props) => (props.align ? props.align : "center")}; ;
-`;
-const AvatarView = styled.View`
-  width: 375px;
-  height: 136px;
-  background-color: #bce0fd;
-  justify-content: center;
-  align-items: center;
-`;
-const ProfileView = styled.View`
-  margin: 20px 32px;
-`;
-const SkillView = styled.View`
-  width: 375px;
-  height: 164px;
-  background-color: #f1f9ff;
-  border-bottom-width: 1px;
-  border-bottom-color: #bce0fd;
-`;
-const TeamView = styled.View`
-  width: 375px;
-  height: 134px;
-  background-color: #f1f9ff;
-`;
-const FollowButton = styled.View`
-  width: 96px;
-  height: 40px;
-  background-color: #2699fb;
-  justify-content: center;
-  align-items: center;
-  border-radius: 4px;
-`;
-const TagBox = styled.View`
-  height: 30px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  margin-right: 10px;
-  border-color: #bce0fd;
-  border-width: 1px;
-  border-radius: 4px;
-  justify-content: center;
-  align-items: center;
-  background-color: #f1f9ff;
-`;
-const Circle = styled.View`
-  width: 40px;
-  height: 40px;
-  border-radius: 40px;
-  background-color: #bce0fd;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  margin-right: 16px;
-`;
+const { width, height } = Dimensions.get('window');
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  header: {
+    height: height * 0.1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  body: {
+    flex: 1,
+    padding: 16,
+  },
+  profile: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  avatar: {
+    width: width * 0.2,
+    height: width * 0.2,
+    borderRadius: (width * 0.2) / 2,
+    backgroundColor: '#ddd',
+    marginRight: 16,
+  },
+  details: {
+    flex: 1,
+  },
+  name: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  email: {
+    fontSize: 16,
+    color: '#888',
+  },
+  bio: {
+    fontSize: 16,
+    marginTop: 8,
+  },
+  feed: {
+    marginTop: 32,
+  },
+  feedTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+});
 
 export default ProfileScreen;
