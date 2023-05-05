@@ -7,9 +7,9 @@ import {
   useWindowDimensions,
   ScrollView,
 } from "react-native";
-import Logo from "../../../assets/images/HoleInTheWall.png";
-import CustomInput from "../../components/CustomInput";
-import CustomButton from "../../components/CustomButton";
+import Logo from "@assets/images/HoleInTheWall.png";
+import CustomInput from "@components/CustomInput";
+import CustomButton from "@components/CustomButton";
 import { useNavigation } from "@react-navigation/core";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -74,9 +74,15 @@ const ConfirmEmailScreen = () => {
 
   const onResendVerificationPressed = () => {
     {
+      const email = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(getData("email"));
+        }, 1000);
+      });
+
       axios
         .post("http://localhost:8000/emails/sendemail", {
-          email: ["akewlhipzter@gmail.com"],
+          Email: [email],
         })
         .then((response) => {
           console.log(response);

@@ -1,8 +1,7 @@
-import React from "react";
 import axios from "axios";
 import DataHandling from "../DataHandling";
 
-this.ApiLogin = function (username, password) {
+const ApiLogin = (username, password) => {
   const form_data = new FormData();
   form_data.append("username", username);
   form_data.append("password", password);
@@ -30,5 +29,4 @@ this.ApiLogin = function (username, password) {
       }
     });
 };
-var ApiLogin = this.ApiLogin;
 export default ApiLogin;
