@@ -63,18 +63,6 @@ def get_all_my_posts_comments(
     return crud.get_all_my_posts_with_comments(db=db, userID=current_user.UserID)
 
 
-# Get my Posts with comments
-@router.get("/myposts/comments", response_model=schemas.Post)
-def get_my_posts_with_comments(db: Session = Depends(database.get_db),
-                    current_user: schemas.User = Depends(authentication.get_current_user)):
-        return crud.get_my_posts_with_comments(db=db, userID=current_user.UserID)
-
-# Get all of my Posts with comments 
-@router.get("/myposts/comments/all")
-def get_all_my_posts_comments(db: Session = Depends(database.get_db),
-                              current_user: schemas.User = Depends(authentication.get_current_user)):
-        return crud.get_all_my_posts_with_comments(db=db, userID=current_user.UserID)
-
 # Get my posts
 @router.get("/myposts")
 def get_my_posts(

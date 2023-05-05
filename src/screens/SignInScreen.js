@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   View,
+  Text,
   Image,
   StyleSheet,
   useWindowDimensions,
@@ -22,7 +23,7 @@ const SignInScreen = () => {
   const storeData = async (key, value) => {
     try {
       await AsyncStorage.setItem(key, value);
-      alert(value + "saved");
+      alert("Token saved");
     } catch (e) {
       // saving error
       console.log("Error saving data" + e);
@@ -33,8 +34,8 @@ const SignInScreen = () => {
     try {
       const value = await AsyncStorage.getItem(key);
       if (value !== null) {
-        alert(key + "retrieved");
-        console.log("The value is " + value);
+        alert("Token retrieved");
+        console.log("The token is " + value);
         return value;
       }
     } catch (e) {

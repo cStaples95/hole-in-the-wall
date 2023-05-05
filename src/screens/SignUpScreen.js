@@ -47,7 +47,6 @@ const SignUpScreen = () => {
         .then((response) => {
           console.log(response);
           if (response.status === 201) {
-            storeData("username", username);
             alert("Registration successful");
             storeData("email", email);
           }
@@ -62,7 +61,8 @@ const SignUpScreen = () => {
               if (response.status === 200) {
                 alert("Email sent");
                 console.log("The code is " + response.data);
-                storeData("email-code", response.data);
+                let code = response.data;
+                storeData("email-code", code);
                 navigation.navigate("Confirm Email Screen");
               }
             })
