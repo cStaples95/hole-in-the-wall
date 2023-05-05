@@ -35,6 +35,7 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     Password: str
     Email: str
+    Username: str
 
 
 class UserLogin(UserBase):
@@ -73,15 +74,17 @@ class UserDelete(User):
 # got rid of firstname, lastname and dob added bio and picture (picture is str until we figure out how to add image)
 class ProfileBase(BaseModel):
     Bio: Union[str, None] = None # Made bio optional to allow for auto profile creation - Casey Staples
-    Picture: Union[str, None] = None # Made picture optional until we figure out how to add image - Casey Staples
+    Picture: Union[str, None] = None
+    PictureExt: Union[str, None] = None
     class Config:
         orm_mode = True
 
 class ProfileCreate(ProfileBase):
-    Username: str
+    UserID: Union[str, None] = None
 
 class ProfileReturn(ProfileBase):
     Username: str
+    UserID: Union[str, None] = None
     class Config:
         orm_mode = True
 
@@ -92,6 +95,17 @@ class Profile(ProfileBase):
     class Config:
         orm_mode = True
 
+# Comment models-----------------------------------------------------------
+
+class LikesBase(BaseModel):
+    UserID: int
+    PostID: int
+
+class Likes(LikesBase):
+    LikeID: int
+
+    class Config:
+        orm_mode = True
 
 # Comment models-----------------------------------------------------------
 
@@ -128,6 +142,9 @@ class PostBase(BaseModel):
     # Optional fields
     Location: Union[str, None] = None
     Comments: List[Union[CommentBase, None]] = []
+    Picture: Union[str, None] = None
+    PictureExt: Union[str, None] = None
+    Likes: List[Union[LikesBase, None]] = []
 
     class Config:
         orm_mode = True

@@ -7,9 +7,9 @@ import {
   useWindowDimensions,
   ScrollView,
 } from "react-native";
-import Logo from "../../../assets/images/HoleInTheWall.png";
-import CustomInput from "../../components/CustomInput";
-import CustomButton from "../../components/CustomButton";
+import Logo from "@assets/images/HoleInTheWall.png";
+import CustomInput from "@components/CustomInput";
+import CustomButton from "@components/CustomButton";
 import { useNavigation } from "@react-navigation/core";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -26,7 +26,7 @@ const SignUpScreen = () => {
   const storeData = async (key, value) => {
     try {
       await AsyncStorage.setItem(key, value);
-      alert(value + "saved");
+      alert("Token saved");
     } catch (e) {
       // saving error
       console.log("Error saving data" + e);

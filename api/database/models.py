@@ -23,6 +23,7 @@ class Profile(Base):
     ProfileID = Column(Integer, primary_key=True, index=True, autoincrement= True)
     UserID = Column(Integer, ForeignKey("User.UserID"))
     Picture = Column(BLOB)
+    PictureExt = Column(String)
     Bio = Column(String)
 
     
@@ -45,6 +46,14 @@ class Comments(Base):
 
     UserID = Column(Integer, ForeignKey("User.UserID"))
     PostID = Column(Integer, ForeignKey("Post.PostID"))
+    
+class Likes(Base):
+    __tablename__ = "Likes"
+
+    LikeID = Column(Integer, primary_key=True, index=True, autoincrement=True)
+
+    UserID = Column(Integer, ForeignKey("User.UserID"))
+    PostID = Column(Integer, ForeignKey("Post.PostID"))
 
 # added picture
 class Post(Base):
@@ -56,8 +65,11 @@ class Post(Base):
     DatePosted = Column(String)
     Location = Column(String)
     Picture = Column(BLOB)
+    PictureExt = Column(String)
 
     UserID = Column(Integer, ForeignKey("User.UserID"))
+    Likes = relationship("Likes")
+    # TODO: foreign key for Likes and comments
 
 
 class PostTages(Base):

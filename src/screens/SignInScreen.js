@@ -6,9 +6,9 @@ import {
   useWindowDimensions,
   ScrollView,
 } from "react-native";
-import Logo from "../../../assets/images/HoleInTheWall.png";
-import CustomInput from "../../components/CustomInput";
-import CustomButton from "../../components/CustomButton";
+import Logo from "@assets/images/HoleInTheWall.png";
+import CustomInput from "@components/CustomInput";
+import CustomButton from "@components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -55,7 +55,7 @@ const SignInScreen = () => {
           console.log(response);
           if (response.status === 200) {
             alert("Login successful");
-            navigation.navigate("Home Feed Screen");
+            navigation.navigate("ActivityFeed Screen");
             // This will get chansged to a more secure method of storage after more research.
             console.log("The token is " + response.data.access_token);
             storeData("token", response.data.access_token);
