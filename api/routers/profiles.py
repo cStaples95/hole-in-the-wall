@@ -25,7 +25,7 @@ def get_profile(profile_id: int, db: Session = Depends(database.get_db)):
     return crud.get_profile_from_id(db=db, profile_id=profile_id)
 
 # get profile from username
-@router.get("/get/{username}", response_model=schemas.ProfileReturn)
+@router.get("/get/users/{username}", response_model=schemas.ProfileReturn)
 def get_profile_from_username(username: str, db: Session = Depends(database.get_db)):
     return crud.get_profile_from_username(db=db, username=username)
 
