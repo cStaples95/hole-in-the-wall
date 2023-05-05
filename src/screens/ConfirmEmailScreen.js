@@ -7,9 +7,9 @@ import {
   useWindowDimensions,
   ScrollView,
 } from "react-native";
-import Logo from "../../../assets/images/HoleInTheWall.png";
-import CustomInput from "../../components/CustomInput";
-import CustomButton from "../../components/CustomButton";
+import Logo from "@assets/images/HoleInTheWall.png";
+import CustomInput from "@components/CustomInput";
+import CustomButton from "@components/CustomButton";
 import { useNavigation } from "@react-navigation/core";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -17,34 +17,24 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const storeData = async (value) => {
   try {
     await AsyncStorage.setItem("userToken", value);
-    alert(value + "saved");
+    alert("Token saved");
   } catch (e) {
     // saving error
     console.log("Error saving data" + e);
   }
 };
 
-const getData = async (key) => {
+const getData = async () => {
   try {
-    const value = await AsyncStorage.getItem(key);
+    const value = await AsyncStorage.getItem("userToken");
     if (value !== null) {
-      alert(key + "retrieved");
-      console.log("The value is " + value);
+      alert("Token retrieved");
+      console.log("The token is " + value);
       return value;
     }
   } catch (e) {
     // error reading value
     console.log("Error reading data" + e);
-  }
-};
-
-const clearData = async () => {
-  try {
-    await AsyncStorage.clear();
-    alert("Data cleared");
-  } catch (e) {
-    // clear error
-    console.log("Error clearing data" + e);
   }
 };
 
@@ -67,31 +57,7 @@ const ConfirmEmailScreen = () => {
           console.log("The code is " + value);
           if (value === verificationCode) {
             alert("Email verified");
-
-            try {
-              const username = new Promise((resolve, reject) => {
-                setTimeout(() => {
-                  resolve(getData("username"));
-                }, 1000);
-              });
-              username.then((value) => {
-                console.log("The username is " + value);
-                axios
-                  .post("http://localhost:8000/profiles/create", {
-                    Username: value,
-                  })
-                  .then((response) => {
-                    console.log(response);
-                    if (response.status === 200) {
-                      alert("Profile created");
-                      clearData();
-                      navigation.navigate("Sign In Screen");
-                    }
-                  });
-              });
-            } catch (error) {
-              console.log("Error: " + error);
-            }
+            navigation.navigate("Sign In Screen");
           } else {
             alert("Invalid code");
           }

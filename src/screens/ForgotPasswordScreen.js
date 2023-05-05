@@ -7,9 +7,9 @@ import {
   useWindowDimensions,
   ScrollView,
 } from "react-native";
-import Logo from "../../../assets/images/HoleInTheWall.png";
-import CustomInput from "../../components/CustomInput";
-import CustomButton from "../../components/CustomButton";
+import Logo from "@assets/images/HoleInTheWall.png";
+import CustomInput from "@components/CustomInput";
+import CustomButton from "@components/CustomButton";
 import { useNavigation } from "@react-navigation/core";
 
 const ForgotPasswordScreen = () => {

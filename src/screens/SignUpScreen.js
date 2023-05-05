@@ -7,9 +7,9 @@ import {
   useWindowDimensions,
   ScrollView,
 } from "react-native";
-import Logo from "../../../assets/images/HoleInTheWall.png";
-import CustomInput from "../../components/CustomInput";
-import CustomButton from "../../components/CustomButton";
+import Logo from "@assets/images/HoleInTheWall.png";
+import CustomInput from "@components/CustomInput";
+import CustomButton from "@components/CustomButton";
 import { useNavigation } from "@react-navigation/core";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -26,7 +26,7 @@ const SignUpScreen = () => {
   const storeData = async (key, value) => {
     try {
       await AsyncStorage.setItem(key, value);
-      alert(value + "saved");
+      alert("Token saved");
     } catch (e) {
       // saving error
       console.log("Error saving data" + e);
@@ -47,7 +47,6 @@ const SignUpScreen = () => {
         .then((response) => {
           console.log(response);
           if (response.status === 201) {
-            storeData("username", username);
             alert("Registration successful");
             storeData("email", email);
           }
@@ -62,7 +61,8 @@ const SignUpScreen = () => {
               if (response.status === 200) {
                 alert("Email sent");
                 console.log("The code is " + response.data);
-                storeData("email-code", response.data);
+                let code = response.data;
+                storeData("email-code", code);
                 navigation.navigate("Confirm Email Screen");
               }
             })
