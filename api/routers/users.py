@@ -23,13 +23,15 @@ def login(UserLogin: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 
 # Create User
 @router.post("/register", status_code=status.HTTP_201_CREATED)
-def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
-    db_user = crud.get_user_by_username(db, user.username.lower())
+async def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
+    db_user = crud.get_user_by_username(db, user.Username.lower())
     if db_user is not None:
         raise HTTPException(
             status_code=409, detail="Username already registered")
     else:
-         return crud.create_user(db=db, user=user)
+        userID = crud.create_user(db=db, user=user)
+        crud.create_new_profile(db=db, profile=schemas.ProfileCreate(UserID=userID))
+        return userID;
     
  # Get all Users
  # This is for testing purposes only
@@ -61,3 +63,6 @@ def delete_user(id: int, db: Session = Depends(database.get_db)):
         crud.delete_user_by_userID(db, userID=id)
         return
 
+@router.get("/username/{user_id}")
+def get_username(db: Session = Depends(database.get_db), user_id: int = None):
+    return crud.get_username_by_userID(db=db, userID=user_id)
